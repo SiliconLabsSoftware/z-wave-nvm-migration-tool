@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -16,17 +16,6 @@ jobs:
 
       - name: Install build dependencies
         run: sudo apt-get update && sudo apt-get install -y cmake build-essential pkg-config
-
-      - name: Install json-c 
-        run: |
-          git clone https://github.com/json-c/json-c.git
-          cd json-c 
-          mkdir build 
-          cd build
-          cmake ..
-          make 
-          sudo make install 
-          cd ../../
 
       - name: Build project
         run: |
