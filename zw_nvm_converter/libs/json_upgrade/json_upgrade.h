@@ -1,7 +1,7 @@
 #ifndef JSON_UPGRADE_H 
 #define JSON_UPGRADE_H
 
-#include <json-c/json.h>
+#include <json.h>
 
 int compare_versions(const char *v1, const char *v2);
 void populate_missing_required_properties(json_object *target, json_object *schema);

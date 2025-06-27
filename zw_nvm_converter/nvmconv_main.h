@@ -1,6 +1,6 @@
 #ifndef NVMCONV_MAIN_H
 #define NVMCONV_MAIN_H
-#include <json-c/json.h>
+#include <json.h>
 
 json_object *zw_nvm_to_json(const char *in_file,
                             char *out_file,

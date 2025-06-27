@@ -12,7 +12,7 @@ The Z-Wave NVM3 tool simplifies the process of reading NVM3 data and converting 
 **Requirements**: 
 Install dependencies 
 ```sh
-$ sudo apt-get install cmake build-essential pkg-config
+$ sudo apt-get install cmake build-essential 
 ```
 Install json-c library:
 ```sh
