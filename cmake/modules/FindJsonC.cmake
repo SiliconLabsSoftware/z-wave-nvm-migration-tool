@@ -7,9 +7,6 @@
 
 include(FetchContent)
 
-set(ENABLE_DOXYGEN OFF)
-set(BUILD_TESTING OFF CACHE BOOL "Disable building tests")
-
 if(NOT DEFINED JSONC_GIT_REPOSITORY)
   if(DEFINED ENV{JSONC_GIT_REPOSITORY})
     set(JSONC_GIT_REPOSITORY $ENV{JSONC_GIT_REPOSITORY})
@@ -33,7 +30,11 @@ FetchContent_Declare(
   GIT_TAG        ${JSONC_GIT_TAG}
   GIT_SUBMODULES_RECURSE True
   GIT_SHALLOW 1
+  # EXCLUDE_FROM_ALL
 )
+
+set(BUILD_TESTING OFF CACHE BOOL "Disable building tests")
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Enable building shared libraries")
 
 message(STATUS "${CMAKE_PROJECT_NAME}: Depends: ${JSONC_GIT_REPOSITORY}#${JSONC_GIT_TAG}")
 string(REGEX MATCH ".*/?main/?.*" JSONC_UNSTABLE_GIT_TAG "${JSONC_GIT_TAG}")

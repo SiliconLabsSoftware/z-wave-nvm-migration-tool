@@ -1,3 +1,4 @@
+set(BUILD_SHARED_LIBS OFF)
 add_library(zw_nvm_converter nvmconv_main.c)
 add_library (controllerlib_api INTERFACE)
 
@@ -12,5 +13,3 @@ add_subdirectory( libs)
 target_link_libraries( zw_nvm_converter PUBLIC
                        controllerlib_7xx
                      )
-
-install(TARGETS zw_nvm_converter DESTINATION bin)

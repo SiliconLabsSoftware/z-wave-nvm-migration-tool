@@ -22,16 +22,7 @@ jobs:
           mkdir -p build
           cd build 
           cmake .. 
-          make 
-
-      - name: Archive Executable 
-        run: |
-          TAG_NAME=${GITHUB_REF##*/}
-          REPO_NAME=${GITHUB_REPOSITORY#*/}
-          mkdir -p dist
-          cp ./build/zwave_nvm_tool dist/
-          cd dist 
-          tar -czvf ../${REPO_NAME}-${TAG_NAME}.tar.gz *
+          cmake --build . --target package
 
       - name: Create GitHub Release
         env:
@@ -40,6 +31,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: ${{ github.event_name == 'push' && contains( github.ref, 'refs/tags/' ) }}
         with:
-          files: ./*.tar.gz
+          files: ./build/*.deb
           token: ${{ secrets.GITHUB_TOKEN }}
 
