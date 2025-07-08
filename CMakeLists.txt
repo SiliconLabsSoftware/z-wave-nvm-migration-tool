@@ -6,6 +6,13 @@ project(
 	LANGUAGES C CXX ASM
 )
 
+option(COVERAGE "Enable coverage reporting" OFF)
+if(COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    message(STATUS "Building with code coverage")
+    add_compile_options(--coverage -O0 -g)
+    add_link_options(--coverage)
+endif()
+
 find_package(json-c QUIET)
 if(NOT json-c_FOUND)
   message(STATUS "json-c not found, fetching via FetchContent")

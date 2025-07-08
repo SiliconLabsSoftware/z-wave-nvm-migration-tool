@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2025 Silicon Laboratories Inc. https://www.silabs.com
 ---
-
 name: build
 
 on:  # yamllint disable-line rule:truthy
@@ -13,28 +12,75 @@ on:  # yamllint disable-line rule:truthy
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ${{ vars.RUNNER || 'ubuntu-24.04' }}
+    env:
+      SONAR_OUT_DIR: sonar
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.1.1
 
       - name: Install build dependencies
-        # yamllint disable rule:line-length
-        run: sudo apt-get update && sudo apt-get install -y cmake build-essential libjson-c-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ${{ env.debian_packages }}
+        env:
+          debian_packages: cmake build-essential gcovr libjson-c-dev
+
+      - name: Install SonarQube Build Wrapper
+        id: sonar-bw
+        env:
+          # yamllint disable rule:line-length
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL || 'https://sonarcloud.io'}}
+          # yamllint disable rule:line-length
+        uses: SonarSource/sonarqube-scan-action/install-build-wrapper@2500896589ef8f7247069a56136f8dc177c27ccf  # v5.2.0
 
       - name: Build project
+        env:
+          cmake: ${{ steps.sonar-bw.outputs.build-wrapper-binary }} --out-dir "${{ env.SONAR_OUT_DIR }}" cmake
+          build-dir: build
         run: |
-          mkdir -p build
-          cd build
-          cmake ..
-          cmake --build . --target package
+          set -x
+          cmake="${{ env.cmake }}"
+          test -x "${{ steps.sonar-bw.outputs.build-wrapper-binary }}" || cmake=cmake
+          ${cmake} -B ${{ env.build-dir }} -DCOVERAGE=ON .
+          ${cmake} --build ${{ env.build-dir }}
+          mkdir -p ${{ env.SONAR_OUT_DIR }}
+          gcovr --sonarqube --print-summary -o ${{ env.SONAR_OUT_DIR }}/coverage.xml
+          cmake --build ${{ env.build-dir }} --target package
+
+      - name: SonarQube Scan
+        # yamllint disable-line rule:line-length
+        uses: sonarsource/sonarqube-scan-action@2500896589ef8f7247069a56136f8dc177c27ccf  # v5.2.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+        if: ${{ env.SONAR_HOST_URL }}
+        # yamllint disable rule:line-length
+        with:
+          args: >-
+            --define sonar.cfamily.compile-commands="${{ env.SONAR_OUT_DIR}}/compile_commands.json"
+            --define sonar.coverageReportPaths="${{ env.SONAR_OUT_DIR }}/coverage.xml"
+        # yamllint enable rule:line-length
+
+      - name: Upload analyze artifact
+        if: steps.sonar-bw.outcome == 'success'
+        # yamllint disable-line rule:line-length
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+        with:
+          # yamllint disable-line
+          name: ${{ github.event.repository.name }}-analyze
+          path: |
+            sonar-project.properties
+            .scannerwork/report-task.txt
+            ${{ env.SONAR_OUT_DIR }}
 
       - name: Create GitHub Release
         env:
           token-defined: ${{ secrets.GITHUB_TOKEN != '' }}
           REPO_NAME: ${GITHUB_REPOSITORY#*/}
         uses: softprops/action-gh-release@v2
+        # yamllint disable rule:line-length
         if: ${{ github.event_name == 'push' && contains( github.ref, 'refs/tags/' ) }}
         with:
           files: ./build/*.deb
