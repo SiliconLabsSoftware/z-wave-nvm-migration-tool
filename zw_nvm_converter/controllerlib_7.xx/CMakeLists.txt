@@ -19,7 +19,7 @@ target_link_libraries(controllerlib_7xx
 
 target_include_directories(controllerlib_7xx
                             PUBLIC
-                              ${JSON-C_INCLUDE_DIRS}/json-c
+                              ${JSON-C_INCLUDE_DIRS}
                             PRIVATE
                               ${CMAKE_CURRENT_SOURCE_DIR}
                               ${CMAKE_CURRENT_SOURCE_DIR}/zwave
