@@ -6,7 +6,15 @@ project(
 	LANGUAGES C CXX ASM
 )
 
-include(cmake/modules/FindJsonC.cmake)
+find_package(json-c QUIET)
+if(NOT json-c_FOUND)
+  message(STATUS "json-c not found, fetching via FetchContent")
+  include(cmake/modules/FindJsonC.cmake)
+  set(JSON-C_INCLUDE_DIRS ${json-c_SOURCE_DIR})
+else()
+  find_path(JSON-C_INCLUDE_DIRS NAMES json-c PATH_SUFFIXES include)
+  message(STATUS "json-c include directory: ${JSON-C_INCLUDE_DIRS}")
+endif()
 # Added option for debugging
 option(ENABLE_DEBUG "Debug Mode is ON/OFF" OFF)
 
@@ -33,7 +41,6 @@ TYPE DOC
 
 set(CPACK_GENERATOR "DEB")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Silicon Labs")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libjson-c2 | libjson-c3 | libjson-c4")
-
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libjson-c5 | libjson-c4 | libjson-c3 | libjson-c2")
 
 include(CPack)

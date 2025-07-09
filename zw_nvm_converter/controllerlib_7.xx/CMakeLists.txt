@@ -14,12 +14,12 @@ target_link_libraries(controllerlib_7xx
                       app_utils 
                       bin2hex 
                       nvm3lib 
-                      ${JSON_C_LIBRARIES}
+                      json-c
                       )
 
 target_include_directories(controllerlib_7xx
                             PUBLIC
-                              ${json-c_SOURCE_DIR}/json-c
+                              ${JSON-C_INCLUDE_DIRS}/json-c
                             PRIVATE
                               ${CMAKE_CURRENT_SOURCE_DIR}
                               ${CMAKE_CURRENT_SOURCE_DIR}/zwave

@@ -20,7 +20,7 @@ if(NOT DEFINED JSONC_GIT_TAG)
   if(DEFINED ENV{JSONC_GIT_TAG})
     set(JSONC_GIT_TAG $ENV{JSONC_GIT_TAG})
   else()
-    set(JSONC_GIT_TAG "json-c-0.18-20240915")
+    set(JSONC_GIT_TAG "json-c-0.16-20220414")
   endif()
 endif()
   
@@ -30,7 +30,6 @@ FetchContent_Declare(
   GIT_TAG        ${JSONC_GIT_TAG}
   GIT_SUBMODULES_RECURSE True
   GIT_SHALLOW 1
-  # EXCLUDE_FROM_ALL
 )
 
 set(BUILD_TESTING OFF CACHE BOOL "Disable building tests")
