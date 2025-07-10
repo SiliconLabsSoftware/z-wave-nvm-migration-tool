@@ -23,12 +23,6 @@ jobs:
     # yamllint disable-line rule:line-length
     if: ${{ vars.SONAR_HOST_URL && github.event.workflow_run.conclusion == 'success' }}
     steps:
-      # yamllint disable-line rule:line-length
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.workflow_run.head_commit.id }}
-
       - name: Download analyze artifacts
         # yamllint disable-line rule:line-length
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
