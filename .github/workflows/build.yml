@@ -1,10 +1,15 @@
-name: Build and Release
+# YAML -*- mode: yaml; tab-width: 2; indent-tabs-mode: nil; coding: utf-8 -*-
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2025 Silicon Laboratories Inc. https://www.silabs.com
+---
 
-on:
+name: build
+
+on:  # yamllint disable-line rule:truthy
   push:
-    branches: 
+    branches:
     tags:
-  pull_request: 
+  pull_request:
 
 jobs:
   build:
@@ -15,13 +20,14 @@ jobs:
         uses: actions/checkout@v4.1.1
 
       - name: Install build dependencies
-        run: sudo apt-get update && sudo apt-get install -y cmake build-essential libjson-c-dev 
+        # yamllint disable rule:line-length
+        run: sudo apt-get update && sudo apt-get install -y cmake build-essential libjson-c-dev
 
       - name: Build project
         run: |
           mkdir -p build
-          cd build 
-          cmake .. 
+          cd build
+          cmake ..
           cmake --build . --target package
 
       - name: Create GitHub Release
@@ -33,4 +39,3 @@ jobs:
         with:
           files: ./build/*.deb
           token: ${{ secrets.GITHUB_TOKEN }}
-
