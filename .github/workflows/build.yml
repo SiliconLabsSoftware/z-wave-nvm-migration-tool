@@ -15,6 +15,7 @@ jobs:
     runs-on: ${{ vars.RUNNER || 'ubuntu-24.04' }}
     env:
       SONAR_OUT_DIR: sonar
+      build-dir: build
 
     steps:
       - name: Checkout code
@@ -36,9 +37,9 @@ jobs:
         uses: SonarSource/sonarqube-scan-action/install-build-wrapper@2500896589ef8f7247069a56136f8dc177c27ccf  # v5.2.0
 
       - name: Build project
+        id: build
         env:
           cmake: ${{ steps.sonar-bw.outputs.build-wrapper-binary }} --out-dir "${{ env.SONAR_OUT_DIR }}" cmake
-          build-dir: build
         run: |
           set -x
           cmake="${{ env.cmake }}"
@@ -48,6 +49,14 @@ jobs:
           mkdir -p ${{ env.SONAR_OUT_DIR }}
           gcovr --sonarqube --print-summary -o ${{ env.SONAR_OUT_DIR }}/coverage.xml
           cmake --build ${{ env.build-dir }} --target package
+
+      - name: Upload package artifacts
+        # yamllint disable-line rule:line-length
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+        with:
+          # yamllint disable-line rule:line-length
+          name: ${{ github.event.repository.name }}-package
+          path: ${{ env.build-dir }}/*.deb
 
       - name: SonarQube Scan
         # yamllint disable-line rule:line-length
