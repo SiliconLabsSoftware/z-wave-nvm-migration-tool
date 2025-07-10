@@ -50,6 +50,7 @@ jobs:
           set -x
           ldd $(which ${{ github.event.repository.name }})          
           ${{ github.event.repository.name }} -h
+          exit 42 # TODO
 
       - name: Propagate status on fail
         # yamllint disable-line rule:line-length
