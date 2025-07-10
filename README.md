@@ -1,3 +1,7 @@
+### RANDOM NOTES
+
+Some PR are not appearing in dashboard
+
 # Z-WAVE NVM TOOL 
 The Z-Wave NVM3 tool simplifies the process of reading NVM3 data and converting it into a human-readable JSON format. It also provides functionality to upgrade NVM files to newer versions, facilitating controller migration while preserving Z-Wave network information.
 ****
@@ -173,3 +177,4 @@ commander flash nvm.bin --address=0x00074000
 ```sh
 zw_programmer -s <serial_device> -w nvm.bin
 ```
+
