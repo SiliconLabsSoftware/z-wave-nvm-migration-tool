@@ -1,0 +1,14 @@
+:cmock:
+ :mock_prefix: ''
+ :mock_suffix: '_mock'
+ :treat_externs: :include
+ :array_as_byte: true
+ :when_ptr: :smart
+ :array_size_type: ['uint8_t','uint16_t']
+ :plugins:
+  - :ignore_arg
+  - :ignore
+  - :callback
+  - :array
+  - :return_thru_ptr
+  - :expect_any_args

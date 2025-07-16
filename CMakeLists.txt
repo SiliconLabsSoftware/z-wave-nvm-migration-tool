@@ -33,6 +33,27 @@ endif()
 
 set(CMAKE_DEBUG_POSTFIX d)
 
+if (NOT DEFINED SKIP_TESTING)
+  include(cmake/modules/FindCMock.cmake)
+# compile the unity version bundled along with cmock sources.
+ add_library(unity ${cmock_SOURCE_DIR}/vendor/unity/src/unity.c)
+ target_include_directories(unity PUBLIC ${cmock_SOURCE_DIR}/vendor/unity/src)
+ target_compile_options(unity PRIVATE "-fPIC")
+
+#  Build the cmock library and link the above compiled unity with the cmock library
+ add_library(cmock STATIC ${cmock_SOURCE_DIR}/src/cmock.c)
+ target_include_directories(cmock PUBLIC ${cmock_SOURCE_DIR})
+ target_link_libraries(cmock unity)
+ target_compile_options(cmock PRIVATE "-fPIC")
+# and the add_mock functions to make it available to the individual modules 
+ include(cmake/include/add_mock.cmake)
+  include(CTest)
+  message(STATUS "Enable testing for zwave_nvm_tool")
+  enable_testing()
+  # find_program( MEMORYCHECK_COMMAND valgrind )
+  add_subdirectory(tests)
+endif()
+
 add_subdirectory(zw_nvm_converter)
 
 add_executable( z-wave-nvm-migration-tool zwave_nvm_tool.c )
