@@ -435,7 +435,7 @@ static bool set_target_version(const char *protocol_version, const char *app_ver
       nvm3_current_protocol_files_size = sizeof_array(nvm3_files_v5_800s_719_720_xg28);
       return true;
     }
-    else if (prot_minor >= 21 && prot_minor <= 23)
+    else if (prot_minor >= 21 && prot_minor <= 24)
     {
       target_protocol_version.format = 5;
       target_protocol_version.minor = prot_minor;
@@ -445,7 +445,6 @@ static bool set_target_version(const char *protocol_version, const char *app_ver
       return true;
     }
   }
-
   return false;
 }
 

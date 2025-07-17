@@ -228,7 +228,40 @@ void apply_schema_changes_to_lrNodes(json_object *lrNodes, json_object *schema, 
     }
   }
 }
+int get_app_file_format_from_version(const char *target_version){
+  // Derive the app_format from the target version
+  int prot_major, prot_minor, prot_patch;
+  int app_format = -1;
+  if (sscanf(target_version, "%d.%d.%d", &prot_major, &prot_minor, &prot_patch) != 3)
+  {
+    fprintf(stderr, "Error: Failed to parse target version: %s\n", target_version);
+    printf("Target version must use the format <major>.<minor>.<patch>\n");
+    exit(EXIT_FAILURE);
+  }
 
+  if (prot_major == 7)
+  {
+    if (prot_minor >= 11 && prot_minor <= 23)
+    {
+      app_format = 0;
+    }
+    else if (prot_minor == 24)
+    {
+      app_format = 1;
+    }
+    else
+    {
+      fprintf(stderr, "Unsupported protocol version: %s\n", target_version);
+      exit(EXIT_FAILURE);
+    }
+  }
+  else
+  {
+    fprintf(stderr, "Unsupported major version: %d\n", prot_major);
+    exit(EXIT_FAILURE);
+  }
+  return app_format;
+}
 int get_file_system_format_from_version(const char *target_version)
 {
   // Derive the format from the target version
@@ -263,7 +296,7 @@ int get_file_system_format_from_version(const char *target_version)
     {
       format = 4;
     }
-    else if (prot_minor >= 19 && prot_minor <= 23)
+    else if (prot_minor >= 19 && prot_minor <= 24)
     {
       format = 5;
     }
@@ -355,6 +388,7 @@ json_object *upgrade_json_to_version(const char *input_file, char *output_file, 
 {
   printf("Starting upgrade process...\n");
   int format = get_file_system_format_from_version(target_version);
+  int app_format = get_app_file_format_from_version(target_version);
   json_object *root = NULL;
   // Load the input JSON file
   if (migration_mode)
@@ -385,6 +419,7 @@ json_object *upgrade_json_to_version(const char *input_file, char *output_file, 
   // Set the format in the root object
   // printf("Setting format to %d in the root object.\n", format);
   json_object_object_add(root, "format", json_object_new_int(format));
+  json_object_object_add(root, "applicationFileFormat", json_object_new_int(app_format));
 
   // Upgrade the "controller" object
   // printf("Upgrading 'controller' object...\n");
