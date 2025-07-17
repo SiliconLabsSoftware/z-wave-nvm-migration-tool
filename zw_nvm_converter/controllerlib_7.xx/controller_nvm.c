@@ -342,6 +342,7 @@ static nvm3_file_descriptor_t nvm3_app_files[] = {
 /****************************  NVM Basic Handling  ***************************/
 /*****************************************************************************/
 
+/* Set target protocol and application version for generating nvm image */
 static bool set_target_version(const char *protocol_version, const char *app_version)
 {
   int prot_major, prot_minor, prot_patch;
@@ -445,6 +446,7 @@ static bool set_target_version(const char *protocol_version, const char *app_ver
       return true;
     }
   }
+  // Return false if protocol version is not supported 
   return false;
 }
 
@@ -529,6 +531,7 @@ static bool app_nvm_is_pre_v7_19(uint8_t major, uint8_t minor, uint8_t patch)
 }
 
 /*****************************************************************************/
+/* Used to parse the key 0x5A000 to determine whether the hardware is xg23 or xg28 */
 bool check_controller_nvm(const uint8_t *nvm_image, size_t nvm_image_size, nvmLayout_t nvm_layout)
 {
   uint32_t prot_version_le = 0;
@@ -842,6 +845,7 @@ void dump_controller_nvm_keys(void)
 /*****************************************************************************/
 
 /*****************************************************************************/
+/* Read protocol version and application version for backing up data to json */
 static void backup_info(nvmLayout_t nvm_layout)
 {
   json_object *jo = json_object_new_object();
@@ -1712,6 +1716,7 @@ static json_object *nvm_from_719_controller_info_to_json(nvmLayout_t nvm_layout)
 }
 
 /*****************************************************************************/
+/* Read controller information and pack it into json object */
 json_object *controller_info_nvm_get_json(nvmLayout_t nvm_layout)
 {
   json_object *jo = json_object_new_object();
