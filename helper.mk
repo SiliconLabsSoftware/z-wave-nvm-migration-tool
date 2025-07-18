@@ -236,3 +236,8 @@ all/default: ${default_rules}
 run:
 	file -E ${run_file}
 	${run_file} ${run_args}
+
+arch/%: extra/build/build-rootfs.sh
+	ARCH=${@F} $<
+
+arch/all: arch/armhf arch/arm64 arch/amd64 arch/i366 
