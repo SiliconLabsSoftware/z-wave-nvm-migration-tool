@@ -47,8 +47,14 @@ install(FILES
 TYPE DOC
 )
 
-set(CPACK_GENERATOR "DEB")
-set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Silicon Labs")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libjson-c5 | libjson-c4 | libjson-c3 | libjson-c2")
+set(CPACK_PACKAGE_VENDOR "Silicon Labs")
+set(CPACK_PACKAGE_CONTACT "https://github.com/SiliconLabsSoftware/z-wave-nvm-migration-tool")
+if(NOT CPACK_GENERATOR)
+  set(CPACK_GENERATOR "DEB")
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libjson-c5 | libjson-c4 | libjson-c3 | libjson-c2")
+  set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
+endif()
+
+message(${CPACK_PACKAGE_FILE_NAME} "")
 
 include(CPack)
