@@ -218,8 +218,8 @@ dist/cmake: ${build_dir}
 
 dist/deb: ${build_dir}
 	${cmake} --build $< --target package
-	install -d ${@D}
-	cp -av ${<}/*.deb ${@D}/
+	mkdir -p ${<}/${@D}
+	cp -av ${<}/*.deb ${<}/${@D}/
 
 dist: dist/deb
 
