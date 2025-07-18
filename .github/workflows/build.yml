@@ -83,14 +83,3 @@ jobs:
             sonar-project.properties
             .scannerwork/report-task.txt
             ${{ env.SONAR_OUT_DIR }}
-
-      - name: Create GitHub Release
-        env:
-          token-defined: ${{ secrets.GITHUB_TOKEN != '' }}
-          REPO_NAME: ${GITHUB_REPOSITORY#*/}
-        uses: softprops/action-gh-release@v2
-        # yamllint disable rule:line-length
-        if: ${{ github.event_name == 'push' && contains( github.ref, 'refs/tags/' ) }}
-        with:
-          files: ./build/*.deb
-          token: ${{ secrets.GITHUB_TOKEN }}
