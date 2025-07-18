@@ -1,6 +1,13 @@
 Z-Wave NVM Tool Release Note 
 ==============================
 
+# Release 1.0.2
+(release date 2025-07-31)
+
+## New Features/Improvements/Bug fixes
+* Added support for version 7.24.x
+* Deliver as packages for multi arch
+
 # Release 1.0.1
 (release date 2025-06-30)
 
