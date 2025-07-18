@@ -1,3 +1,5 @@
+# .gitignore
+
 # Prerequisites
 *.d
 
@@ -54,3 +56,10 @@ dkms.conf
 # Exclude CMake build folder 
 build
 .vscode
+
+# More folders
+tmp/
+dist/
+
+# Editors
+*~
