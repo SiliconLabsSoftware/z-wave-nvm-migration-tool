@@ -23,10 +23,7 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ${{ env.debian_packages }}
-        env:
-          debian_packages: cmake build-essential gcovr libjson-c-dev ruby 
+          ./helper.mk setup
 
       - name: Install SonarQube Build Wrapper
         id: sonar-bw

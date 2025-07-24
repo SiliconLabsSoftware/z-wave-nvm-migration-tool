@@ -41,6 +41,7 @@ debian_packages+=cmake
 debian_packages+=libjson-c-dev
 # packages/deps/more:
 debian_packages+=gcovr
+debian_packages+=ruby
 
 app_dir?=opt
 
