@@ -35,17 +35,13 @@ jobs:
 
       - name: Build project
         id: build
+        run: >-
+          set -x ;
+          ./helper.mk
+          SONAR_OUT_DIR="${{ env.SONAR_OUT_DIR }}"
+          sonar_bw_app="${{env.build-wrapper-binary}}"
         env:
-          cmake: ${{ steps.sonar-bw.outputs.build-wrapper-binary }} --out-dir "${{ env.SONAR_OUT_DIR }}" cmake
-        run: |
-          set -x
-          cmake="${{ env.cmake }}"
-          test -x "${{ steps.sonar-bw.outputs.build-wrapper-binary }}" || cmake=cmake
-          ${cmake} -B ${{ env.build-dir }} -DCOVERAGE=ON .
-          ${cmake} --build ${{ env.build-dir }}
-          mkdir -p ${{ env.SONAR_OUT_DIR }}
-          gcovr --sonarqube --print-summary -o ${{ env.SONAR_OUT_DIR }}/coverage.xml
-          cmake --build ${{ env.build-dir }} --target package
+          build-wrapper-binary: ${{ steps.sonar-bw.outputs.build-wrapper-binary }}
 
       - name: Upload package artifacts
         # yamllint disable-line rule:line-length
