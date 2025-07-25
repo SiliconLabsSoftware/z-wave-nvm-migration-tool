@@ -161,235 +161,6 @@ void test_app_nvm_is_pre_v7_21(void)
   TEST_ASSERT_FALSE(app_nvm_is_pre_v7_21(7, 21, 0));
 }
 
-// void test_check_controller_nvm(void)
-// {
-//   /* This function should check the controller NVM and return true if it is valid */
-//   size_t nvm_image_size_tc1 = 0xC000;
-//   uint8_t nvm_image_tc1[nvm_image_size_tc1];
-//   memset(nvm_image_tc1, 0xAB, nvm_image_size_tc1); // Fill with dummy data
-//   user_message_Ignore();
-//   uint32_t prot_version_le = htole32(0x00071200); // Set protocol version to 7.18.0
-//   nvm3_readData_print_error_ExpectAndReturn(&nvm3_protocol_handle, FILE_ID_ZW_VERSION, &prot_version_le, sizeof(prot_version_le), nvm3_current_protocol_files, (uint32_t)nvm3_current_protocol_files, ECODE_NVM3_OK);
-//   nvm3_readData_print_error_IgnoreArg_value();
-//   nvm3_readData_print_error_ReturnThruPtr_value(&prot_version_le);
-//   check_controller_nvm(nvm_image_tc1, nvm_image_size_tc1, NVM3_700s);
-//   TEST_ASSERT_EQUAL(ZW_700s, hardware_info);
-//   user_message_StopIgnore();
-// }
-
-// void test_open_controler_nvm(void)
-// {
-// /* Open controller nvm image based on nvm layout */
-// // 700 Series
-// size_t nvm_image_size_tc1 = 0xC000;
-// uint8_t nvm_image_tc1[nvm_image_size_tc1];
-// memset(nvm_image_tc1, 0xAB, nvm_image_size_tc1); // Fill with dummy data
-// user_message_Ignore();
-// nvm3_halOpen_ExpectAnyArgsAndReturns(ECODE_NVM3_OK);
-// nvm3_halRamSetBin_ExpectAndReturns(nvm_image_tc1, nvm_image_size_tc1);
-// nvm3_halSetPageSize_ExpectAnyArgsAndReturns(ECODE_NVM3_OK);
-// open_controller_nvm(nvm_image_tc1, nvm_image_size_tc1, NVM3_700s);
-// TEST_ASSERT_EQUAL(PROTOCOL_NVM_SIZE_700s, nvm3_protocol_handle.nvmSize);
-// TEST_ASSERT_EQUAL(APP_NVM_SIZE_700s, nvm3_app_handle.nvmSize);
-// // 800s prior 7.19
-// size_t nvm_image_size_tc2 = 0x10000;
-// uint8_t nvm_image_tc2[nvm_image_size_tc2];
-// memset(nvm_image_tc2, 0xAB, nvm_image_size_tc2); // Fill with dummy data
-// user_message_Ignore();
-// // nvm3_halOpen_ExpectAnyArgsAndReturns(ECODE_NVM3_OK);
-// // nvm3_halRamSetBin_ExpectAndReturns(nvm_image_tc2, nvm_image_size_tc2);
-// open_controller_nvm(nvm_image_tc2, nvm_image_size_tc2, NVM3_800s_PRIOR_719);
-// TEST_ASSERT_EQUAL(PROTOCOL_NVM_SIZE_800s_PRIOR_719, nvm3_protocol_handle.nvmSize);
-// TEST_ASSERT_EQUAL(APP_NVM_SIZE_800s_PRIOR_719, nvm3_app_handle.nvmSize);
-// // 800s from 7.19
-// size_t nvm_image_size_tc3 = 0xA000;
-// uint8_t nvm_image_tc3[nvm_image_size_tc3];
-// memset(nvm_image_tc3, 0xAB, nvm_image_size_tc3); // Fill with dummy data
-// user_message_Ignore();
-// // nvm3_halOpen_ExpectAnyArgsAndReturns(ECODE_NVM3_OK);
-// // nvm3_halRamSetBin_ExpectAndReturns(nvm_image_tc3, nvm_image_size_tc3);
-// open_controller_nvm(nvm_image_tc3, nvm_image_size_tc3, NVM3_800s_PRIOR_719);
-// TEST_ASSERT_NULL(&nvm3_app_handle);
-// TEST_ASSERT_EQUAL(NVM_SIZE_800s_FROM_719, nvm3_protocol_handle.nvmSize);
-// }
-
-void test_get_controller_nvm_image(void)
-{
-  /* Get the controller NVM image */
-
-  /* Check whether the image is retrieved successfully and the size is correct */
-}
-
-void test_close_controller_nvm(void)
-{
-  /* Close the controller NVM */
-
-  /* Check whether the NVM is closed successfully */
-}
-
-// void test_dump_controller_nvm_keys(void)
-// {
-//   /* Dump the controller NVM */
-//   nvm3_app_handle.hasBeenOpened = true;
-//   nvm3_protocol_handle.hasBeenOpened = true;
-//   set_target_version("7.15.1", "7.15.1");
-//   nvm3_dump_keys_with_filename_ExpectAnyArgs();
-//   dump_controller_nvm_keys();
-//   set_target_version("7.18.0", "7.18.0");
-//   nvm3_dump_keys_with_filename_ExpectAnyArgs();
-//   dump_controller_nvm_keys();
-//   set_target_version("7.19.0", "7.19.0");
-//   nvm3_dump_keys_with_filename_ExpectAnyArgs();
-//   dump_controller_nvm_keys();
-// }
-
-// void test_backup_info(void)
-// {
-//   uint32_t mock_protocol_version_718 = htole32(0x00071200); // Set protocol version to 7.18.0
-//   uint32_t mock_app_version_718 = htole32(0x00071200); // Set app version to 7.18.0
-//   nvm3_readData_print_error_ExpectAnyArgs();
-//   nvm3_readData_print_error_ReturnThruPtr_h(&mock_protocol_version_718);
-//   nvm3_readData_print_error_ExpectAnyArgs();
-//   nvm3_readData_print_error_ReturnThruPtr_h(&mock_protocol_version_718);
-//   backup_info(NVM3_700s);
-//   TEST_ASSERT_EQUAL(0x0071200, target_app_version);
-//   TEST_ASSERT_EQUAL(0x0071200, target_protocol_version);
-//   hardware_info = EFR32XG28;
-//   nvm3_readData_print_error_ExpectAnyArgs();
-//   nvm3_readData_print_error_ReturnThruPtr_h(&mock_protocol_version_718);
-//   nvm3_readData_print_error_ExpectAnyArgs();
-//   nvm3_readData_print_error_ReturnThruPtr_h(&mock_protocol_version_718);
-//   backup_info(NVM3_800s_FROM_719);
-//   TEST_ASSERT_EQUAL(0x0071200, target_app_version);
-//   TEST_ASSERT_EQUAL(0x0071200, target_protocol_version);
-//   hardware_info = EFR32XG23;
-//   uint32_t mock_protocol_version_719 = htole32(0x00071300); // Set protocol version to 7.18.0
-//   uint32_t mock_app_version_719 = htole32(0x00071300); // Set app version to 7.18.0
-//   nvm3_readData_print_error_ExpectAnyArgs();
-//   nvm3_readData_print_error_ReturnThruPtr_h(&mock_protocol_version_719);
-//   nvm3_readData_print_error_ExpectAnyArgs();
-//   nvm3_readData_print_error_ReturnThruPtr_h(&mock_protocol_version_719);
-//   backup_info(NVM3_800s_PRIOR_719);
-//   TEST_ASSERT_EQUAL(0x0071300, target_app_version);
-//   TEST_ASSERT_EQUAL(0x0071300, target_protocol_version);
-// }
-
-// void test_cmd_classes_to_json(void)
-// {
-//   /* Convert command classes to JSON format */
-//   const char *expected_json_str = "{\
-//   \"cmdClasses\":{\
-//     \"includedInsecurely\":[\
-//       94,\
-//       85,\
-//       86,\
-//       34,\
-//       159,\
-//       152,\
-//       116,\
-//       108,\
-//       138\
-//     ],\
-//     \"includedSecurelyInsecureCCs\":[],\
-//     \"includedSecurelySecureCCs\":[]\
-//   }\
-// }";
-//   json_object *expected_jo = json_tokener_parse(expected_json_str);
-//   SApplicationCmdClassInfo ai = {9, {94, 85, 86, 34, 159, 152, 116, 108, 138}, 4, {1, 2, 3, 4}, 4, {5, 6, 7, 8}};
-//   json_object *jo = cmd_classes_to_json(ai);
-//   /* TODO: Check value*/
-//   TEST_ASSERT_EQUAL();
-// }
-
-// void test_app_config_to_json(void)
-// {
-//   SApplicationConfiguration_prior_7_15_3 ac_7_15_3 = {};
-//   nvm3_readData_print_error_ExpectAnyArgsAndReturns(ECODE_NVM3_OK);
-//   nvm3_readData_print_error_ReturnThruPtr_h();
-//   app_config_to_json(NVM3_700s);
-//   SApplicationConfiguration_prior_7_18_1 ac_prior_7_18_1 = {};
-
-//   app_config_to_json(NVM3_800s_FROM_719);
-//   SApplicationConfiguration_7_18_1 ac_7_18_1 = {};
-
-//   app_config_to_json(NVM3_800s_PRIOR_719);
-//   SApplicationConfiguration_7_21_x ac_7_21 = {};
-//   app_config_to_json(NVM3_800s_PRIOR_719);
-// }
-
-void test_suc_node_list_to_json(void)
-{
-  /* Convert SUC node list to JSON format */
-
-  /* Check whether the conversion is successful and the output is correct */
-}
-
-void test_suc_node_list_v5_to_json(void)
-{
-  /* Convert SUC node list v5 to JSON format */
-
-  /* Check whether the conversion is successful and the output is correct */
-}
-
-// void test_route_cache_line_to_json(void)
-// {
-//   ROUTECACHE_LINE *rcl_tc1 = {0x00 | 0x03, {2,3,4,5}};
-//   ROUTECACHE_LINE *rcl_tc2 = {0x20 | 0x03, {2,3,4,5}};
-//   ROUTECACHE_LINE *rcl_tc3 = {0x40 | 0x03, {2,3,4,5}};
-//   json_object *beaming = NULL;
-//   json_object *protocol_rate = NULL;
-//   json_object *repeater_list = NULL;
-
-//   // routecacheLineConfSize = 0x00, has no beam capability
-//   json_object *jo = route_cache_line_to_json(rcl);
-//   TEST_ASSERT_TRUE(json_object_object_get_ex(jo, "beaming", &value));
-//   TEST_ASSERT_FALSE(json_object_get_boolean(value))
-//   TEST_ASSERT_TRUE(json_object_object_get_ex(jo, "protocolRate", &value));
-//   TEST_ASSERT_EQUAL_INT(json_object_get_boolean(value))
-
-//   // routecacheLineConfSize = 0x20, 250ms beaming capability
-//   jo = route_cache_line_to_json(rcl);
-//   value = NULL;
-//   protocol_rate = NULL;
-//   TEST_ASSERT_TRUE(json_object_object_get_ex(jo, "beaming", &value));
-//   TEST_ASSERT_EQUAL_STRING("250ms", json_object_get_string(value))
-//   TEST_ASSERT_TRUE(json_object_object_get_ex(jo, "protocolRate", &value));
-//   TEST_ASSERT_EQUAL_INT(json_object_get_boolean(value))
-
-//   // routecacheLineConfSize = 0x40, 1000ms beaming capability
-//   jo = route_cache_line_to_json(rcl);
-//   value = NULL;
-//   protocol_rate = NULL;
-//   TEST_ASSERT_TRUE(json_object_object_get_ex(jo, "beaming", &value));
-//   TEST_ASSERT_EQUAL_STRING("1000ms", json_object_get_string(value))
-//   TEST_ASSERT_TRUE(json_object_object_get_ex(jo, "protocolRate", &value));
-//   TEST_ASSERT_EQUAL_INT(json_object_get_boolean(value));
-// }
-
-void test_node_table_to_json(void)
-{
-  /* Convert node table to JSON format */
-
-  /* Check whether the conversion is successful and the output is correct */
-}
-
-void test_lr_node_table_to_json(void)
-{
-  /* Convert node table to JSON format */
-
-  /* Check whether the conversion is successful and the output is correct */
-}
-
-void test_nvm711_controller_into_to_json(void)
-{
-  /* Convert controller info to JSON format for NVM711 */
-
-  /* Check whether the conversion is successful and the output is correct */
-}
-
-// nvm715_controller_info_to_json
-// nvm_from_719_controller_info_to_json
-// controller_info_nvm_get_json
 void test_check_data_rate(void)
 {
   const int supported_data_rate[] = {9600, 40000};
@@ -780,13 +551,6 @@ void test_file_version(void)
   TEST_ASSERT_EQUAL_HEX(0x01070B00, file_version(1, 7, 11, 0));
   TEST_ASSERT_EQUAL_HEX(0x05071304, file_version(5, 7, 19, 4));
 }
-// create_nvm3_version_files
-// is_json_file_supported
-// parse_controller_nvm711_json
-// parse_controller_nvm715_json
-// parse_controller_nvm719_json
-// json_get_nvm_layout
-// controller_parse_json
 
 void test_read_layout_from_nvm_size(void)
 {
@@ -808,19 +572,12 @@ int main(void)
   RUN_TEST(test_app_nvm_is_pre_v7_19);
   RUN_TEST(test_app_nvm_is_pre_v7_21);
   RUN_TEST(test_set_target_version);
-  // RUN_TEST(test_check_controller_nvm);
-  // RUN_TEST(test_open_controller_nvm);
-  // RUN_TEST(test_dump_controller_nvm_keys);
-  // RUN_TEST(test_backup_info);
   RUN_TEST(test_parse_app_config_json_prior_7_15_3);
   RUN_TEST(test_parse_app_config_prior_7_18_1);
   RUN_TEST(test_parse_app_config_pre_7_19);
   RUN_TEST(test_parse_app_config_pre_7_21);
   RUN_TEST(test_parse_app_config_from_7_21);
-  // RUN_TEST(test_suc_node_list_to_json);
-  // RUN_TEST(test_suc_node_list_v5_to_json);
   RUN_TEST(test_parse_suc_state_json);
-  // RUN_TEST(test_parse_suc_state_json_from_nvm719);
   RUN_TEST(test_parse_node_capability);
   RUN_TEST(test_parse_node_security);
   RUN_TEST(test_parse_route_cache_line_json);

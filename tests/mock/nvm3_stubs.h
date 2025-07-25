@@ -1,27 +1,6 @@
 #include <string.h>
 #include <nvm3.h>
 
-// const nvm3_HalHandle_t nvm3_halRamHandle = {
-//   .open = NULL,
-//   .close = NULL,
-//   .getInfo = NULL,
-//   .access = NULL,
-//   .pageErase = NULL,
-//   .readWords = NULL,
-//   .writeWords = NULL,
-// };
-
-// const nvm3_HalConfig_t nvm3_halRamConfig = {
-//   .setPageSize = NULL,
-//   .setWriteSize = NULL,
-//   .setDeviceFamily = NULL,
-//   .registerInitMem = NULL,
-//   .triggerWriteFailure = NULL,
-//   .registerWriteFailure = NULL,
-//   .triggerEraseFailure = NULL,
-//   .registerEraseFailure = NULL,
-// };
-
 Ecode_t nvm3_writeData(nvm3_Handle_t *h, nvm3_ObjectKey_t key, const void *value, size_t len);
 Ecode_t nvm3_readPartialData(nvm3_Handle_t *h, nvm3_ObjectKey_t key, void *value, size_t ofs, size_t len);
 Ecode_t nvm3_readData(nvm3_Handle_t *h, nvm3_ObjectKey_t key, void *value, size_t maxLen);
