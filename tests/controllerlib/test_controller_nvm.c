@@ -84,7 +84,7 @@ void test_set_target_version(void)
   RESET_TARGET_VERSION();
   /* False if version is not supported */
   TEST_ASSERT_FALSE(set_target_version("8.23.0", "8.23.0"));
-  TEST_ASSERT_FALSE(set_target_version("7.24.0", "7.24.0"));
+  TEST_ASSERT_TRUE(set_target_version("7.24.0", "7.24.0"));
   TEST_ASSERT_FALSE(set_target_version("7.24", "7.24.0"));
   TEST_ASSERT_FALSE(set_target_version("7.24.0", "7"));
 }
