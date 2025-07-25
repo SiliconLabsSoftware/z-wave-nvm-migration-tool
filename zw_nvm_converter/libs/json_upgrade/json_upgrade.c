@@ -230,7 +230,9 @@ void apply_schema_changes_to_lrNodes(json_object *lrNodes, json_object *schema, 
 }
 int get_app_file_format_from_version(const char *target_version){
   // Derive the app_format from the target version
-  int prot_major, prot_minor, prot_patch;
+  int prot_major = 0;
+  int prot_minor = 0;
+  int prot_patch = 0;
   int app_format = -1;
   if (sscanf(target_version, "%d.%d.%d", &prot_major, &prot_minor, &prot_patch) != 3)
   {
