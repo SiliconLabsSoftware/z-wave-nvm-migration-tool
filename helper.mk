@@ -19,6 +19,8 @@ version?=$(shell git describe --tags --always 2> /dev/null || echo "0")
 # Allow overloading from env if needed
 VERBOSE?=1
 
+COVERAGE?=OFF
+
 cmake?=cmake
 cmake_options?=-B ${build_dir}
 ctest?=ctest
@@ -61,19 +63,22 @@ sonar_scanner_app?=${app_dir}/sonar-scanner-7.1.0.4889-linux-x64/bin/sonar-scann
 
 ifndef SONAR_OUT_DIR
 gcovr?=gcovr
-coverage_file?=${build_dir}/coverage.xml
 sonar_bw_cmdline?=
-COVERAGE?=ON
 else
-setup_rules+=sonar/setup
-default_rules+=coverage sonar/deploy sonar/dist
+COVERAGE=ON
+# setup_rules+=sonar/setup # Will done by CI
+# default_rules+=sonar/deploy sonar/dist # Will done by CI
 gcovr?=gcovr --sonarqube
 sonar_bw_cmdline?=${sonar_bw_app} --out-dir "${SONAR_OUT_DIR}"
 coverage_file?=${SONAR_OUT_DIR}/coverage.xml
 endif
 
+coverage_file?=${build_dir}/coverage.xml
 ifdef COVERAGE
 cmake_options+=-DCOVERAGE=${COVERAGE}
+ifeq (${COVERAGE}, ON)
+default_rules+=coverage
+endif
 endif
 
 # Allow overloading from env if needed
@@ -171,7 +176,7 @@ sonar/dist: ${coverage_file} sonar-project.properties .scannerwork/report-task.t
 		--debug
 	find .scannerwork -type f
 
-sonar/deploy: .scannerwork/report-task.txt 
+sonar/deploy: .scannerwork/report-task.txt
 	@echo "${project}: log: TODO: https://community.sonarsource.com/t/new-github-action-for-c-docker-project/136307/5?u=rzr"
 	ls -l $<
 
@@ -241,4 +246,4 @@ run:
 arch/%: extra/build/build-rootfs.sh
 	ARCH=${@F} $<
 
-arch/all: arch/armhf arch/arm64 arch/amd64 arch/i366 
+arch/all: arch/armhf arch/arm64 arch/amd64 arch/i366
