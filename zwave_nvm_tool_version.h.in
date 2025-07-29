@@ -2,11 +2,11 @@
 #define ZWAVE_NVM_TOOL_VERSION_H
 
 /** X.x.x: Major version of the driver */
-#define ZWAVE_NVM_TOOL_VERSION_MAJOR      1
+#define ZWAVE_NVM_TOOL_VERSION_MAJOR      @CMAKE_PROJECT_VERSION_MAJOR@
 /** x.X.x: Minor version of the driver */
-#define ZWAVE_NVM_TOOL_VERSION_MINOR      0
+#define ZWAVE_NVM_TOOL_VERSION_MINOR      @CMAKE_PROJECT_VERSION_MINOR@
 /** x.x.X: Revision of the driver */
-#define ZWAVE_NVM_TOOL_VERSION_REVISION   1
+#define ZWAVE_NVM_TOOL_VERSION_REVISION   @CMAKE_PROJECT_VERSION_PATCH@
 /* Some helper defines to get a version string */
 #define ZWAVE_NVM_TOOL_VERSTR2(x) #x
 #define ZWAVE_NVM_TOOL_VERSTR(x) ZWAVE_NVM_TOOL_VERSTR2(x)

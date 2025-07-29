@@ -2,9 +2,15 @@ cmake_minimum_required(VERSION 3.7)
 
 project(
   z-wave-nvm-migration-tool
-  VERSION 1.0.0
+  VERSION 1.0.1
 	LANGUAGES C CXX ASM
 )
+
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/zwave_nvm_tool_version.h.in
+  ${CMAKE_CURRENT_BINARY_DIR}/zwave_nvm_tool_version.h
+)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 option(COVERAGE "Enable coverage reporting" OFF)
 if(COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
