@@ -69,9 +69,11 @@ target_link_libraries( z-wave-nvm-migration-tool PRIVATE
                      )
 install(TARGETS z-wave-nvm-migration-tool RUNTIME DESTINATION bin)
 install(FILES
-"${CMAKE_SOURCE_DIR}/README.md"
-"${CMAKE_SOURCE_DIR}/LICENSE"
-TYPE DOC
+  "${CMAKE_SOURCE_DIR}/LICENSE"
+  "${CMAKE_SOURCE_DIR}/README.md"
+  "${CMAKE_SOURCE_DIR}/CHANGES.md"
+  "${CMAKE_SOURCE_DIR}/zw_nvm_converter/schema-json/zwave_data_description_scheme.json"
+  TYPE DOC
 )
 
 set(CPACK_PACKAGE_VENDOR "Silicon Labs")
