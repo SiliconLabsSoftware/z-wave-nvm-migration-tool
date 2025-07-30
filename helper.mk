@@ -26,6 +26,7 @@ cmake_options?=-B ${build_dir}
 ctest?=ctest
 
 build_dir?=build
+test_dir?=tests
 sudo?=sudo
 
 setup_rules+=setup/debian
@@ -209,8 +210,8 @@ ${build_dir}: ${build_dir}/CMakeCache.txt
 test: ${build_dir} all
 	${ctest} --test-dir ${<}/${project_test_dir}
 
-check: ${run_file}
-	${<D}/${<F} --help
+check: ${test_dir}
+	sh ${<F}/test.sh
 
 coverage: ${coverage_file}
 	ls -l "$<"
