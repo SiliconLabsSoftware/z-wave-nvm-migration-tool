@@ -23,7 +23,7 @@ for VERSION in 7.19.0 7.20.0 7.21.0 7.22.0 7.23.0 7.24.0; do
   fi
 
   echo "Verifying output for $VERSION..."
-  diff "$OUTPUT_BIN" "$EXPECTED_BIN"
+  cmp -b "$OUTPUT_BIN" "$EXPECTED_BIN"
   if [ $? -eq 0 ]; then
     echo "$VERSION: PASSED"
   else
