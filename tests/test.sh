@@ -1,16 +1,18 @@
 #!/bin/sh
 
-readonly SCRIPT_PATH="$(dirname "$0")"
-TEST_FOLDER="$(dirname "$SCRIPT_PATH")"
-BINARY_FOLDER="$TEST_FOLDER/assets"
+readonly SCRIPT_PATH=$(realpath $(dirname "$0"))
+PROJECT_FOLDER=$(dirname "$SCRIPT_PATH")
+BINARY_FOLDER="$PROJECT_FOLDER/tests/assets"
 INPUT_BIN="$BINARY_FOLDER/nvm3_7_18_1.bin"
-SCHEMA_FILE="../zwave_data_description_scheme.json"
-MIGRATION_TOOL="../build/z-wave-nvm-migration-tool"
+SCHEMA_FILE="$PROJECT_FOLDER/zwave_data_description_scheme.json"
+MIGRATION_TOOL="$PROJECT_FOLDER/build/z-wave-nvm-migration-tool"
 HARDWARE_PART="EFR32XG23"
-
+TMPDIR=$(mktemp -d)
+status=0
 for VERSION in 7.19.0 7.20.0 7.21.0 7.22.0 7.23.0 7.24.0; do
+  
   VERSION_=$(echo "$VERSION" | sed 's/\./_/g')
-  OUTPUT_BIN="/tmp/nvm3_${VERSION_}.bin"
+  OUTPUT_BIN="${TMPDIR}/nvm3_${VERSION_}.bin"
   EXPECTED_BIN="$BINARY_FOLDER/expected_${VERSION_}.bin"
 
   echo "Migration from 7.18.1 to $VERSION..."
@@ -24,11 +26,14 @@ for VERSION in 7.19.0 7.20.0 7.21.0 7.22.0 7.23.0 7.24.0; do
 
   echo "Verifying output for $VERSION..."
   cmp -b "$OUTPUT_BIN" "$EXPECTED_BIN"
-  if [ $? -eq 0 ]; then
+  current_status=$?
+  if [ $current_status -eq 0 ]; then
     echo "$VERSION: PASSED"
   else
     echo "$VERSION: FAILED"
   fi
+  status=$((status + $current_status))
 
   rm -f "$OUTPUT_BIN"
 done
+exit $status
