@@ -8,7 +8,17 @@ The Z-Wave NVM tool simplifies the process of reading an NVM3 image and converti
 - Hardware: ZGM230S module (BRD4207A) + WSTK (BRD4002A)
 
 > **_Note:_** The following commands are executed on the Ubuntu terminal.
-### Installation
+### Install from release packages
+Download the release packages for various platforms from the [Release page](https://github.com/SiliconLabsSoftware/z-wave-nvm-migration-tool/releases).
+
+Install the `.deb` package on your system using the following commands:
+```sh
+sudo apt-get update
+sudo dpkg -i ./*.deb \
+  || sudo apt install -f -y --no-install-recommends 
+```
+
+### Build from source
 The project is CMake based, to prepare the environment, have a look at [./helper.mk](./helper.mk)'s details for needed steps to setup developer system before using CMake normally.
 
 At the moment stable version of Debian (12) is supported, so it should work also in relatives projects (Ubuntu, RaspiOS, WSL2 etc) and should be easy to adapt to other distributions.
@@ -166,8 +176,9 @@ zw_programmer -s <serial_device> -r nvm.bin
 ```
 ## Flashing NVM3 image to Controller
 
-### 1. Using Simplicity Commander
-> Note: The address of NVM3 region is different for each series: 
+> **_Note:_** The address of the NVM3 region differs by series:
+- **Series 2 (800 Series):** `0x08074000`
+- **Series 1 (700 Series):** `0x00074000`
 ```sh
 # For 800 Series (Series 2)
 commander flash nvm.bin --address=0x08074000
