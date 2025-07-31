@@ -20,7 +20,7 @@ for VERSION in 7.19.0 7.20.0 7.21.0 7.22.0 7.23.0 7.24.0; do
 
   if [ $status -ne 0 ]; then
     echo "Migration process failed for $VERSION."
-    rm -f "$OUTPUT_BIN"
+    rm -rf "$OUTPUT_BIN" "${TMPDIR}"
     exit 1
   fi
 
@@ -32,6 +32,7 @@ for VERSION in 7.19.0 7.20.0 7.21.0 7.22.0 7.23.0 7.24.0; do
     echo "$VERSION: FAILED"
   fi
 
-  rm -f "$OUTPUT_BIN"
+  rm -f "$OUTPUT_BIN" 
 done
+rm -rf "${TMPDIR}"
 exit $status
