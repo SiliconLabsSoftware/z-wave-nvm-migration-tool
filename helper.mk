@@ -210,8 +210,9 @@ ${build_dir}: ${build_dir}/CMakeCache.txt
 test: ${build_dir} all
 	${ctest} --test-dir ${<}/${project_test_dir}
 
-check: ${test_dir}
-	sh ${<F}/test.sh
+check: ${test_dir}/test.sh ${run_file}
+	${run_file}
+	sh ${<D}/${<F}
 
 coverage: ${coverage_file}
 	ls -l "$<"
