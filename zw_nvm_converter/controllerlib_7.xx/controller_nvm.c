@@ -2730,17 +2730,16 @@ static bool parse_controller_nvm719_json(json_object *jo_ctrl, nvmLayout_t nvm_l
 }
 
 /*****************************************************************************/
-nvmLayout_t json_get_nvm_layout(const char *device_info, json_object *jo)
+bool json_get_nvm_layout(const char *device_info, json_object *jo, nvmLayout_t *nvm_layout)
 {
   json_object *jo_ref = NULL;
   const char *protocol_version;
   const char *app_version;
-  nvmLayout_t nvm_layout = NVM3_700s;
 
   if (false == json_get_object_error_check(jo, "controller", &jo_ref, json_type_object, JSON_REQUIRED))
   {
     printf("json_get_nvm_layout: json_get_object_error_check() error: controller\n");
-    return nvm_layout;
+    return false;
   }
 
   protocol_version = json_get_string(jo_ref, "protocolVersion", "", JSON_REQUIRED);
@@ -2750,12 +2749,12 @@ nvmLayout_t json_get_nvm_layout(const char *device_info, json_object *jo)
   if (protocol_version == NULL)
   {
     printf("json_get_nvm_layout: Failed to retrieve protocolVersion\n");
-    return nvm_layout;
+    return false;
   }
   if (app_version == NULL)
   {
     printf("json_get_nvm_layout: Failed to retrieve appVersion\n");
-    return nvm_layout;
+    return false;
   }
 
   if (false == set_target_version(protocol_version, app_version))
@@ -2768,22 +2767,30 @@ nvmLayout_t json_get_nvm_layout(const char *device_info, json_object *jo)
   {
     if (strncmp(protocol_version, "7.19", 4) >= 0)
     {
-      nvm_layout = NVM3_800s_FROM_719;
+      *nvm_layout = NVM3_800s_FROM_719;
       hardware_info = (strcmp(device_info, "EFR32XG28") == 0) ? EFR32XG28 : EFR32XG23;
     }
     else
     {
-      nvm_layout = NVM3_800s_PRIOR_719;
+      *nvm_layout = NVM3_800s_PRIOR_719;
       hardware_info = (strcmp(device_info, "EFR32XG28") == 0) ? EFR32XG28 : EFR32XG23;
     }
   }
   else if (strcmp(device_info, "EFR32XG14") == 0 || strcmp(device_info, "EFR32XG13") == 0)
   {
-    nvm_layout = NVM3_700s;
-    hardware_info = ZW_700s;
+    if (strncmp(protocol_version, "7.21", 4) <= 0)
+    {
+      *nvm_layout = NVM3_700s;
+      hardware_info = ZW_700s;
+    }
+    else 
+    {
+      printf("700 Series only supports protocol versions up to 7.21.x\n");
+      return false;
+    }
   }
 
-  return nvm_layout;
+  return true;
 }
 
 /*****************************************************************************/

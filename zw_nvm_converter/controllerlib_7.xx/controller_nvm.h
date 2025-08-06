@@ -37,6 +37,6 @@ json_object* protocol_nvm_get_json(void);
 json_object* app_nvm_get_json(void);
 
 nvmLayout_t read_layout_from_nvm_size(size_t nvm_size);
-nvmLayout_t json_get_nvm_layout(const char *device_info, json_object *jo);
+bool json_get_nvm_layout(const char *device_info, json_object *jo, nvmLayout_t *nvm_layout);
 
 #endif // _NVMLIB711_H

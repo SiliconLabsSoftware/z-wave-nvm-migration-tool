@@ -52,9 +52,8 @@ static size_t nvmlib_json_to_nvm_common(json_object *jo, uint8_t **nvm_buf_ptr, 
 {
   size_t bin_size = 0;
   uint8_t *buf_ptr = 0;
-  nvmLayout_t nvm_layout = json_get_nvm_layout(device_info, jo);
-  /* TODO Implement this */
-  if (true)
+  nvmLayout_t nvm_layout = NVM3_700s; 
+  if (json_get_nvm_layout(device_info, jo, &nvm_layout))
   {
     open_controller_nvm(NULL, 0, nvm_layout);
 
