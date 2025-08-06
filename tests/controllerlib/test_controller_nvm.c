@@ -19,7 +19,7 @@ int mock_int_array[10] = {};
 uint8_t mock_byte_array[10] = {};
 
 /* Mocked functions */
-/* json get functions */
+// Callback function for mocking json_get_intarray in unit tests.
 uint8_t json_get_intarray_Callback(json_object *parent, const char *key, int *array, uint32_t length, bool is_required, int cmock_num_calls)
 {
   for (uint32_t i = 0; i < length; i++)
@@ -29,6 +29,7 @@ uint8_t json_get_intarray_Callback(json_object *parent, const char *key, int *ar
   return length;
 }
 
+// Callback function for mocking json_get_bytearray in unit tests.
 uint8_t json_get_bytearray_Callback(json_object *parent, const char *key, uint8_t *array, uint32_t length, bool is_required, int cmock_num_calls)
 {
   for (uint32_t i = 0; i < length; i++)
@@ -38,6 +39,22 @@ uint8_t json_get_bytearray_Callback(json_object *parent, const char *key, uint8_
   return length;
 }
 
+json_object *json_return_object = NULL;
+// Callback function for mocking json_get_object_error_check in unit tests.
+// It sets *jo_val to json_return_object if available
+bool json_get_object_error_check_Callback(json_object *parent, const char *key, json_object **jo_val, json_type expected_type, bool is_required, int cmock_num_calls)
+{
+  if (json_return_object == NULL)
+  {
+    *jo_val = NULL;
+    return false;
+  }
+  else
+  {
+    *jo_val = json_return_object;
+    return true;
+  }
+}
 void setUp(void)
 {
 }
@@ -546,6 +563,104 @@ void test_parse_app_config_from_7_21(void)
   json_object_put(jo);
 }
 
+void test_json_get_nvm_layout(void)
+{
+  json_object *jo = json_tokener_parse("{"
+      "\"format\":4,"
+      "\"applicationFileFormat\":0,"
+      "\"controller\":{"
+      "}"
+  "}"); 
+  nvmLayout_t nvm_layout = NVM3_700s;
+  // controller object doesn't exist
+  json_return_object = NULL;
+  json_get_object_error_check_StubWithCallback(json_get_object_error_check_Callback);
+  TEST_ASSERT_FALSE(json_get_nvm_layout("EFR32XG23", NULL, &nvm_layout));
+  // protocol version is NULL
+  json_return_object = json_tokener_parse("{"
+      "\"format\":4,"
+      "\"applicationFileFormat\":0,"
+      "\"controller\":{"
+          "\"applicationVersion\":\"7.18.0\""
+      "}"
+  "}"); 
+  json_get_object_error_check_StubWithCallback(json_get_object_error_check_Callback);
+  json_get_string_ExpectAnyArgsAndReturn(NULL);
+  json_get_string_ExpectAndReturn(json_return_object, "applicationVersion", "", JSON_REQUIRED, "7.19.0");
+  json_get_int_ExpectAndReturn(jo, "applicationFileFormat", 0, JSON_REQUIRED, 0);
+  TEST_ASSERT_FALSE(json_get_nvm_layout("EFR32XG23", jo, &nvm_layout));
+  // app version is NULL
+  json_return_object = json_tokener_parse("{"
+      "\"format\":4,"
+      "\"applicationFileFormat\":0,"
+      "\"controller\":{"
+          "\"protocolVersion\":\"7.18.0\","
+      "}"
+  "}");
+  json_get_object_error_check_StubWithCallback(json_get_object_error_check_Callback);
+  json_get_string_ExpectAndReturn(json_return_object, "protocolVersion", "", JSON_REQUIRED, "7.18.0");
+  json_get_string_ExpectAnyArgsAndReturn(NULL);
+  json_get_int_ExpectAndReturn(jo, "applicationFileFormat", 0, JSON_REQUIRED, 0);
+  TEST_ASSERT_FALSE(json_get_nvm_layout("EFR32XG23", jo, &nvm_layout));
+  // 800 Series
+  json_return_object = json_tokener_parse("{"
+      "\"format\":5,"
+      "\"applicationFileFormat\":0,"
+      "\"controller\":{"
+          "\"protocolVersion\":\"7.19.0\","
+          "\"applicationVersion\":\"7.19.0\""
+      "}"
+  "}");
+  json_get_object_error_check_StubWithCallback(json_get_object_error_check_Callback);
+  json_get_string_ExpectAndReturn(json_return_object, "protocolVersion", "", JSON_REQUIRED, "7.19.0");
+  json_get_string_ExpectAndReturn(json_return_object, "applicationVersion", "", JSON_REQUIRED, "7.19.0");
+  json_get_int_ExpectAndReturn(jo, "applicationFileFormat", 0, JSON_REQUIRED, 0);
+  TEST_ASSERT_TRUE(json_get_nvm_layout("EFR32XG23", jo, &nvm_layout));
+  TEST_ASSERT_EQUAL(NVM3_800s_FROM_719, nvm_layout);
+  json_return_object = json_tokener_parse("{"
+      "\"format\":4,"
+      "\"applicationFileFormat\":0,"
+      "\"controller\":{"
+          "\"protocolVersion\":\"7.18.0\","
+          "\"applicationVersion\":\"7.18.0\""
+      "}"
+  "}");
+  json_get_object_error_check_StubWithCallback(json_get_object_error_check_Callback);
+  json_get_string_ExpectAndReturn(json_return_object, "protocolVersion", "", JSON_REQUIRED, "7.18.0");
+  json_get_string_ExpectAndReturn(json_return_object, "applicationVersion", "", JSON_REQUIRED, "7.18.0");
+  json_get_int_ExpectAndReturn(jo, "applicationFileFormat", 0, JSON_REQUIRED, 0);
+  TEST_ASSERT_TRUE(json_get_nvm_layout("EFR32XG23", jo, &nvm_layout));
+  TEST_ASSERT_EQUAL(NVM3_800s_PRIOR_719, nvm_layout);
+  // 700 Series 
+  json_return_object = json_tokener_parse("{"
+      "\"format\":4,"
+      "\"applicationFileFormat\":0,"
+      "\"controller\":{"
+          "\"protocolVersion\":\"7.18.0\","
+          "\"applicationVersion\":\"7.18.0\""
+      "}"
+  "}");
+  json_get_object_error_check_StubWithCallback(json_get_object_error_check_Callback);
+  json_get_string_ExpectAndReturn(json_return_object, "protocolVersion", "", JSON_REQUIRED, "7.18.0");
+  json_get_string_ExpectAndReturn(json_return_object, "applicationVersion", "", JSON_REQUIRED, "7.18.0");
+  json_get_int_ExpectAndReturn(jo, "applicationFileFormat", 0, JSON_REQUIRED, 0);
+  TEST_ASSERT_TRUE(json_get_nvm_layout("EFR32XG13", jo, &nvm_layout));
+  TEST_ASSERT_EQUAL(NVM3_700s, nvm_layout);
+  // 700s only supports up to 7.21.x
+  jo = json_tokener_parse("{"
+      "\"format\":5,"
+      "\"applicationFileFormat\":0,"
+      "\"controller\":{"
+          "\"protocolVersion\":\"7.22.0\","
+          "\"applicationVersion\":\"7.22.0\""
+      "}");
+  json_get_object_error_check_StubWithCallback(json_get_object_error_check_Callback);
+  json_get_string_ExpectAndReturn(json_return_object, "protocolVersion", "", JSON_REQUIRED, "7.22.0");
+  json_get_string_ExpectAndReturn(json_return_object, "applicationVersion", "", JSON_REQUIRED, "7.22.0");
+  json_get_int_ExpectAndReturn(jo, "applicationFileFormat", 0, JSON_REQUIRED, 0);
+  TEST_ASSERT_FALSE(json_get_nvm_layout("EFR32XG13", jo, &nvm_layout));
+}
+
 void test_file_version(void)
 {
   TEST_ASSERT_EQUAL_HEX(0x01070B00, file_version(1, 7, 11, 0));
@@ -582,5 +697,6 @@ int main(void)
   RUN_TEST(test_parse_node_security);
   RUN_TEST(test_parse_route_cache_line_json);
   RUN_TEST(test_file_version);
+  RUN_TEST(test_json_get_nvm_layout);
   return UNITY_END();
 }
