@@ -2757,12 +2757,6 @@ bool json_get_nvm_layout(const char *device_info, json_object *jo, nvmLayout_t *
     return false;
   }
 
-  if (false == set_target_version(protocol_version, app_version))
-  {
-    printf("json_get_nvm_layout:set_target_version() error\n");
-    return false;
-  }
-
   if (strcmp(device_info, "EFR32XG28") == 0 || strcmp(device_info, "EFR32XG23") == 0)
   {
     if (strncmp(protocol_version, "7.19", 4) >= 0)
@@ -2788,6 +2782,12 @@ bool json_get_nvm_layout(const char *device_info, json_object *jo, nvmLayout_t *
       printf("700 Series only supports protocol versions up to 7.21.x\n");
       return false;
     }
+  }
+
+  if (false == set_target_version(protocol_version, app_version))
+  {
+    printf("json_get_nvm_layout:set_target_version() error\n");
+    return false;
   }
 
   return true;
