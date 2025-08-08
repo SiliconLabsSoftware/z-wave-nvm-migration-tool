@@ -162,7 +162,7 @@ json_object* version_to_json(uint32_t version)
 
   char version_buf[12];
 
-  sprintf(version_buf, "%d.%d.%d", major, minor, patch);
+  snprintf(version_buf, 12, "%d.%d.%d", major, minor, patch);
 
   return json_object_new_string(version_buf);
 }
@@ -236,7 +236,8 @@ static bool search_object(json_object *jso,
       json_object *child = json_object_array_get_idx(jso, i);
       if (search_object(child, jso_find, path_items, path_item_count, current_path_item_index + 1))
       {
-        sprintf(path_items[current_path_item_index].name, "%zd", i);
+        snprintf(path_items[current_path_item_index].name, MAX_PATH_ITEM_SIZE , "%zd", i);
+        path_items[current_path_item_index].name[MAX_PATH_ITEM_SIZE - 1] = 0;
         return true;
       }
     }

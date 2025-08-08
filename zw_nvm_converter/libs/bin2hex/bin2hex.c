@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "bin2hex.h"
+
+#define MAX_HEX_LINE_LENGTH 64 // Maximum length allowed for a hex line
 typedef enum
 {
     iHex_data            = 0x00 ,
@@ -23,7 +25,7 @@ bool bin2hex(const char* binary_file, const char* hex_file, uint32_t start_addre
     int chr , ret ;
 
     uint8_t buffer[ 16 ] ;
-    char bufferOut[ 64 ] ;
+    char bufferOut[ MAX_HEX_LINE_LENGTH ] ;
     uint8_t bufferIndex ;
     uint32_t addrCount ;
     
@@ -143,22 +145,22 @@ uint32_t intelHexLine( uint8_t size , uint16_t addr , iHexType_t type , uint8_t 
     uint8_t cks ;
             
     // Start Code + Byte Count.
-    outIndex = sprintf( outPut , ":%02X" , size ) ;
+    outIndex = snprintf( outPut , 4, ":%02X" , size ) ;
     cks = size ;
             
     // Address.
-    outIndex += sprintf( outPut + outIndex , "%04X" , addr ) ;
+    outIndex += snprintf( outPut + outIndex , 5 , "%04X" , addr ) ;
     cks += ( uint8_t ) ( addr >> 8 ) ;
     cks += ( uint8_t ) ( addr      ) ;
     
     // Record type.
-    outIndex += sprintf( outPut + outIndex , "%02X" , ( uint8_t ) type ) ;
+    outIndex += snprintf( outPut + outIndex , 3 , "%02X" , ( uint8_t ) type ) ;
     cks += ( uint8_t ) type ;
             
     // Data.
     for( int i = 0 ; ( i < size ) && ( data != NULL ) ; i++ )
     {
-        outIndex += sprintf( outPut + outIndex , "%02X" , data[ i ] ) ;
+        outIndex += snprintf( outPut + outIndex , 3 , "%02X" , data[ i ] ) ;
         cks += data[ i ] ;
     }
     
@@ -167,7 +169,7 @@ uint32_t intelHexLine( uint8_t size , uint16_t addr , iHexType_t type , uint8_t 
     cks += 1 ;
 
     // Check sum.
-    outIndex += sprintf( outPut + outIndex , "%02X" , cks ) ;
+    outIndex += snprintf( outPut + outIndex , 3 ,  "%02X" , cks ) ;
 
     return( ( uint32_t ) outIndex ) ;
 }
