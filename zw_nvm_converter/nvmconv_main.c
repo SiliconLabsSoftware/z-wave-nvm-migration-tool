@@ -84,14 +84,15 @@ json_object *zw_nvm_to_json(const char *in_file,
           if (out_file == NULL)
           {
             // Generate out_file name by replacing .bin with .json in in_file
-            size_t len = strlen(in_file);
+            size_t len = strnlen(in_file, 50);
             if (len > 4 && strcmp(in_file + len - 4, ".bin") == 0)
             {
               out_file = malloc(len - 3 + 5); // Replace ".bin" with ".json"
               if (out_file != NULL)
               {
                 strncpy(out_file, in_file, len - 4);
-                strcpy(out_file + len - 4, ".json");
+                strncpy(out_file + len - 4, ".json", 5);
+                out_file[len + 1] = '\0'; // Ensure null termination
               }
               else
               {
@@ -106,7 +107,8 @@ json_object *zw_nvm_to_json(const char *in_file,
               out_file = malloc(12); // "output.json" + null terminator
               if (out_file != NULL)
               {
-                strcpy(out_file, "output.json");
+                strncpy(out_file, "output.json", 11);
+                out_file[11] = '\0'; // Ensure null termination
               }
               else
               {
@@ -190,7 +192,8 @@ json_object *zw_json_to_nvm(const char *in_file,
               if (out_file != NULL)
               {
                 strncpy(out_file, in_file, len - 4);
-                strcpy(out_file + len - 4, "_upgraded.bin");
+                strncpy(out_file + len - 4, "_upgraded.bin", 13);
+                out_file[len - 4 + 13] = '\0'; // Ensure null termination
               }
               else
               {
@@ -205,7 +208,8 @@ json_object *zw_json_to_nvm(const char *in_file,
               out_file = malloc(11); // "output.bin" + null terminator
               if (out_file != NULL)
               {
-                strcpy(out_file, "output.bin");
+                strncpy(out_file, "output.bin", 10);
+                out_file[10] = '\0'; // Ensure null termination
               }
               else
               {
@@ -219,11 +223,12 @@ json_object *zw_json_to_nvm(const char *in_file,
           {
             if (len > 3 && strcmp(in_file + len - 5, ".json") == 0)
             {
-              out_file = malloc(len - 4 + 3); // Replace ".json" with ".bin"
+              out_file = malloc(len - 4 + 4); // Replace ".json" with ".bin"
               if (out_file != NULL)
               {
                 strncpy(out_file, in_file, len - 5);
-                strcpy(out_file + len - 5, ".bin");
+                strncpy(out_file + len - 5, ".bin", 4);
+                out_file[len - 1]  = '\0'; // Ensure null termination
               }
               else
               {
@@ -238,7 +243,8 @@ json_object *zw_json_to_nvm(const char *in_file,
               out_file = malloc(11); // "output.bin" + null terminator
               if (out_file != NULL)
               {
-                strcpy(out_file, "output.bin");
+                strncpy(out_file, "output.bin", 10);
+                out_file[10] = '\0'; // Ensure null termination
               }
               else
               {

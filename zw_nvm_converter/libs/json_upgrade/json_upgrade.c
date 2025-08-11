@@ -478,7 +478,8 @@ json_object *upgrade_json_to_version(const char *input_file, char *output_file, 
         if (output_file != NULL)
         {
           strncpy(output_file, input_file, len - 5);
-          strcpy(output_file + len - 5, "_upgraded.json");
+          strncpy(output_file + len - 5, "_upgraded.json", 14);
+          output_file[len - 5 + 14] = '\0'; // Ensure null termination
         }
         else
         {
@@ -493,7 +494,8 @@ json_object *upgrade_json_to_version(const char *input_file, char *output_file, 
         output_file = malloc(21);
         if (output_file != NULL)
         {
-          strcpy(output_file, "output_upgraded.json");
+          strncpy(output_file, "output_upgraded.json", 20);
+          output_file[20] = '\0'; // Ensure null termination
         }
         else
         {
