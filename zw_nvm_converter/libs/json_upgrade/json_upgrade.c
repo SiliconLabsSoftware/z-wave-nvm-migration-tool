@@ -467,42 +467,23 @@ json_object *upgrade_json_to_version(const char *input_file, char *output_file, 
   }
   else
   {
+    char temp_output_file[256];
     // Save the updated JSON to the output file
     if (output_file == NULL)
     {
       // Using default output file name "<input_file>_upgraded.json"
       size_t len = strlen(input_file);
-      if (len > 3 && strcmp(input_file + len - 5, ".json") == 0)
+      if (len > 5 && strcmp(input_file + len - 5, ".json") == 0)
       {
-        output_file = malloc(len - 5 + 15);
-        if (output_file != NULL)
-        {
-          strncpy(output_file, input_file, len - 5);
-          strncpy(output_file + len - 5, "_upgraded.json", 14);
-          output_file[len - 5 + 14] = '\0'; // Ensure null termination
-        }
-        else
-        {
-          printf("ERROR: Memory allocation failed for output_file\n");
-          exit(EXIT_FAILURE);
-        }
+      snprintf(temp_output_file, sizeof(temp_output_file), "%.*s_upgraded.json", (int)(len - 5), input_file);
       }
       else
       {
-        printf("WARNING: input_file does not have a .json extension\n"
-               "Using `output_upgraded.json` as default output file name\n");
-        output_file = malloc(21);
-        if (output_file != NULL)
-        {
-          strncpy(output_file, "output_upgraded.json", 20);
-          output_file[20] = '\0'; // Ensure null termination
-        }
-        else
-        {
-          printf("ERROR: Memory allocation failed for output_file\n");
-          exit(EXIT_FAILURE);
-        }
+      printf("WARNING: input_file does not have a .json extension\n"
+           "Using `output_upgraded.json` as default output file name\n");
+      snprintf(temp_output_file, sizeof(temp_output_file), "output_upgraded.json");
       }
+      output_file = temp_output_file;
     }
     printf("Saving updated JSON to output file: %s\n", output_file);
     if (json_object_to_file_ext(output_file, root, JSON_C_TO_STRING_PRETTY) != 0)
