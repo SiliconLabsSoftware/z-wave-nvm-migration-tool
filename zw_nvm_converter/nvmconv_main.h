@@ -7,7 +7,7 @@ json_object *zw_nvm_to_json(const char *in_file,
                             int migration_mode);
 
 
-json_object *zw_json_to_nvm(const char *in_file,
+void zw_json_to_nvm(const char *in_file,
                             char *out_file,
                             const char *device_info,
                             json_object *input_jo,

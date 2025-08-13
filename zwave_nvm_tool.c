@@ -17,7 +17,7 @@ typedef enum
   UNDEFINE_GLOBAL_MODE
 } global_mode_t;
 
-int zw_nvm_migrate(const char *input_file,
+void zw_nvm_migrate(const char *input_file,
                    char *output_file,
                    const char *target_version,
                    const char *device_info,
@@ -25,10 +25,8 @@ int zw_nvm_migrate(const char *input_file,
 /* Parse the arguments */
 global_mode_t parse_main_args(int argc,
                               char **argv,
-                              int *internal_mode,
                               char **file_in,
                               char **file_out,
-                              char **file_fw,
                               char **target_version,
                               char **device_info,
                               char **schema_file)
@@ -38,6 +36,7 @@ global_mode_t parse_main_args(int argc,
   *file_in = NULL;
   *file_out = NULL;
   *target_version = NULL;
+  *device_info = NULL;
   *schema_file = NULL;
   if (argc < 2)
   {
@@ -153,17 +152,13 @@ int main(int argc, char **argv)
 {
   char *file_out = NULL;
   char *file_in = NULL;
-  char *file_fw = NULL;
   char *device_info = NULL;
   char *target_version = NULL;
   char *schema_file = NULL;
-  int internal_mode;
   global_mode_t global_mode = parse_main_args(argc,
                                               argv,
-                                              &internal_mode,
                                               &file_in,
                                               &file_out,
-                                              &file_fw,
                                               &target_version,
                                               &device_info,
                                               &schema_file);
@@ -197,16 +192,29 @@ int main(int argc, char **argv)
 
   return 0;
 }
-
-int zw_nvm_migrate(const char *input_file,
+/**
+ * @brief Migrates an NVM file to a new version using a schema.
+ *
+ * This function performs the following steps:
+ * 1. Converts the input NVM file to a JSON object containing all data of the NVM.
+ * 2. Upgrades the JSON object to the target protocol version using the provided schema.
+ * 3. Converts the upgraded JSON object back to an NVM file for the specified device.
+ *
+ * @param input_file      Path to the input NVM file.
+ * @param output_file     Path to the output NVM file.
+ * @param target_version  Target protocol version for migration.
+ * @param device_info     Device part number (e.g., EFR32ZG23).
+ * @param schema_file     Path to the schema file for upgrading.
+ * @return                no return value
+ */
+void zw_nvm_migrate(const char *input_file,
                    char *output_file,
                    const char *target_version,
                    const char *device_info,
                    const char *schema_file)
 {
   json_object *jo = NULL;
-  json_object *upgraded_jo = NULL;
   jo = zw_nvm_to_json(input_file, NULL, true);
-  upgraded_jo = upgrade_json_to_version(NULL, NULL, target_version, schema_file, jo, true);
+  upgrade_json_to_version(NULL, NULL, target_version, schema_file, jo, true);
   zw_json_to_nvm(input_file, output_file, device_info, jo, true);
 }

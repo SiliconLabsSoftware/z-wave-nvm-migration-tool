@@ -386,7 +386,7 @@ void rearrange_keys(json_object *target, json_object *schema)
   // printf("Rearrangement complete.\n");
 }
 
-json_object *upgrade_json_to_version(const char *input_file, char *output_file, const char *target_version, const char *schema_file, json_object *input_jo, int migration_mode)
+void upgrade_json_to_version(const char *input_file, char *output_file, const char *target_version, const char *schema_file, json_object *input_jo, int migration_mode)
 {
   printf("Starting upgrade process...\n");
   int format = get_file_system_format_from_version(target_version);
@@ -463,7 +463,7 @@ json_object *upgrade_json_to_version(const char *input_file, char *output_file, 
 
   if (migration_mode)
   {
-    return root;
+    return;
   }
   else
   {
@@ -497,4 +497,5 @@ json_object *upgrade_json_to_version(const char *input_file, char *output_file, 
   // Clean up
   json_object_put(root);
   json_object_put(schema);
+  return;
 }
