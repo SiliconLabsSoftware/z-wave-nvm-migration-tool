@@ -18,6 +18,7 @@ static uint32_t nvmlib711_init(void)
 /*****************************************************************************/
 static void nvmlib711_term(void)
 {
+  // Not implemented
 }
 
 /*****************************************************************************/
@@ -30,8 +31,6 @@ static bool nvmlib719_nvm_to_hex(const char* nvm_file, const char* hex_file, uin
 bool nvmlib_nvm_to_json(const uint8_t *nvm_image, size_t nvm_image_size, json_object **jo_out, nvmLayout_t nvm_layout){
   if (open_controller_nvm(nvm_image, nvm_image_size, nvm_layout))
   {
-    // dump_controller_nvm_keys();
-
     *jo_out = controller_info_nvm_get_json(nvm_layout); 
 
     close_controller_nvm();

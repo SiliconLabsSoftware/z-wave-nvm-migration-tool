@@ -1,4 +1,3 @@
-/* © 2019 Silicon Laboratories Inc. */
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -30,8 +29,6 @@
 #define PROTOCOL_NVM_SIZE_800s_PRIOR_719 (40 * 1024)
 #define NVM_SIZE_800s_PRIOR_719 APP_NVM_SIZE_800s_PRIOR_719 + PROTOCOL_NVM_SIZE_800s_PRIOR_719
 
-// #define APP_NVM_SIZE_800s_719       (8 * 1024)
-// #define PROTOCOL_NVM_SIZE_800s_719  (32 * 1024)
 #define NVM_SIZE_800s_FROM_719 (5 * 8 * 1024)
 
 /* This array is not page aligned. Since the nvm3 lib requires
@@ -562,10 +559,6 @@ bool check_controller_nvm(const uint8_t *nvm_image, size_t nvm_image_size, nvmLa
   case 0xC000:
     printf("This is 700 Series\n");
     break;
-  // case 0x10000:
-  //   hardware_info = EFR32XG23;
-  //   printf("[DEBUG_LOG]: Hardware is EFR32XG23\n");
-  //   break;
   default:
     printf("Hardware is unknown or NVM Image Size is invalid\n");
     break;
@@ -578,67 +571,9 @@ bool check_controller_nvm(const uint8_t *nvm_image, size_t nvm_image_size, nvmLa
   uint8_t protocol_version_format = (le32toh(prot_version_le) >> 24) & 0xff;
   printf("File system format: %u\n", protocol_version_format);
   printf("Protocol Version: %u.%u.%u\n", major, minor, patch);
-  // if (((NVM3_800s_PRIOR_719 == nvm_layout) && (minor != 18)) || ((NVM3_800s_FROM_719 == nvm_layout) && (minor < 19)))
-  // {
-  //   close_controller_nvm();
-  //   return check_pass;
-  // }
 
   nvm3_files_v5_800s_719_720 = (hardware_info == EFR32XG28) ? (nvm3_file_descriptor_t *)&nvm3_files_v5_800s_719_720_xg28 : (nvm3_file_descriptor_t *)&nvm3_files_v5_800s_719_720_zgm230;
   nvm3_files_v5_800s_721 = (hardware_info == EFR32XG28) ? (nvm3_file_descriptor_t *)&nvm3_files_v5_800s_721_xg28 : (nvm3_file_descriptor_t *)&nvm3_files_v5_800s_721_zgm230;
-
-  // if (protocol_version_format == 0)
-  // {
-  //   check_pass = nvm3_check_files(&nvm3_protocol_handle, nvm3_protocol_files_v0, sizeof_array(nvm3_protocol_files_v0));
-  // }
-  // else if (protocol_version_format == 1)
-  // {
-  //   check_pass = nvm3_check_files(&nvm3_protocol_handle, nvm3_protocol_files_v1, sizeof_array(nvm3_protocol_files_v1));
-  // }
-  // else if (protocol_version_format == 2)
-  // {
-  //   check_pass = nvm3_check_files(&nvm3_protocol_handle, nvm3_protocol_files_v2, sizeof_array(nvm3_protocol_files_v2));
-  // }
-  // else if (protocol_version_format == 3)
-  // {
-  //   check_pass = nvm3_check_files(&nvm3_protocol_handle, nvm3_protocol_files_v3, sizeof_array(nvm3_protocol_files_v3));
-  // }
-  // else if (protocol_version_format == 4)
-  // {
-  //   check_pass = nvm3_check_files(&nvm3_protocol_handle, nvm3_protocol_files_v4, sizeof_array(nvm3_protocol_files_v4));
-  // }
-  // else if (protocol_version_format == 5)
-  // {
-  //   if (app_nvm_is_v7_19(major, minor, patch) || app_nvm_is_v7_20(major, minor, patch))
-  //   {
-  //     check_pass = nvm3_check_files(&nvm3_protocol_handle, nvm3_files_v5_800s_719_720, sizeof_array(nvm3_files_v5_800s_719_720));
-  //   }
-  //   else
-  //   {
-  //     check_pass = nvm3_check_files(&nvm3_protocol_handle, nvm3_files_v5_800s_721, sizeof_array(nvm3_files_v5_800s_721));
-  //   }
-  // }
-  // else
-  // {
-  //   user_message(MSG_ERROR, "ERROR: Conversion of protocol file system v:%u is not supported\n", protocol_version_format);
-  //   check_pass = false;
-  // }
-
-  // if (nvm_layout != NVM3_800s_FROM_719 && (nvm_layout != NVM3_800s_PRIOR_719 && minor >= 19))
-  // {
-  //   if (app_nvm_is_pre_v7_15_3(major, minor, patch))
-  //   {
-  //     check_pass &= nvm3_check_files(&nvm3_app_handle, nvm3_app_files_prior_7_15_3, sizeof_array(nvm3_app_files_prior_7_15_3));
-  //   }
-  //   else if (app_nvm_is_pre_v7_18_1(major, minor, patch))
-  //   {
-  //     check_pass &= nvm3_check_files(&nvm3_app_handle, nvm3_app_files_prior_7_18_1, sizeof_array(nvm3_app_files_prior_7_18_1));
-  //   }
-  //   else
-  //   {
-  //     check_pass &= nvm3_check_files(&nvm3_app_handle, nvm3_app_files, sizeof_array(nvm3_app_files));
-  //   }
-  // }
 
   close_controller_nvm();
   return check_pass;
@@ -965,45 +900,6 @@ static json_object *app_config_to_json(nvmLayout_t nvm_layout)
 }
 
 /*****************************************************************************/
-// static json_object* nvm_800s_from_721_config_to_json(void)
-// {
-//   json_object* jo = json_object_new_object();
-//   nvm3_file_descriptor_t *fdesc;
-//   int size = 0;
-
-//   for (uint32_t i = 0; i < sizeof_array(nvm3_files_v5_800s_721); i++)
-//   {
-//     fdesc = (nvm3_file_descriptor_t*)&nvm3_files_v5_800s_721[i];
-//     if (fdesc->key == FILE_ID_APPLICATIONCONFIGURATION) {
-//       size = fdesc->size;
-//       break;
-//     }
-//   }
-
-//   if (size == 9) {
-//     SApplicationConfiguration_7_21_x ac = {};
-//     READ_PROT_NVM(FILE_ID_APPLICATIONCONFIGURATION, ac);
-
-//     json_add_int(jo, "rfRegion",          ac.rfRegion);
-//     json_add_int(jo, "txPower",           ac.iTxPower);
-//     json_add_int(jo, "measured0dBm", ac.ipower0dbmMeasured);
-//     json_add_bool(jo, "enablePTI", ac.enablePTI);
-//     json_add_int(jo, "maxTxPower",        ac.maxTxPower);
-//     json_add_int(jo, "nodeIdType",    ac.nodeIdBaseType);
-//   } else if (size == 8) {
-//     SApplicationConfiguration_7_18_1 ac = {};
-//     READ_PROT_NVM(FILE_ID_APPLICATIONCONFIGURATION, ac);
-
-//     json_add_int(jo, "rfRegion",          ac.rfRegion);
-//     json_add_int(jo, "txPower",           ac.iTxPower);
-//     json_add_int(jo, "measured0dBm", ac.ipower0dbmMeasured);
-//     json_add_bool(jo, "enablePTI", ac.enablePTI);
-//     json_add_int(jo, "maxTxPower",        ac.maxTxPower);
-//   }
-//   return jo;
-// }
-
-/*****************************************************************************/
 static json_object *suc_node_list_to_json(void)
 {
   SSucNodeList snl = {};
@@ -1289,7 +1185,6 @@ static json_object *node_table_to_json(nvmLayout_t nvm_layout)
         char node_id_string[10];
         snprintf(node_id_string, sizeof(node_id_string), "%d", node_id);
         json_object_object_add(jo_node_list, node_id_string, jo_node);
-        // json_object_array_add(jo_node_list, jo_node_info);
       }
     }
   }
@@ -1418,15 +1313,9 @@ static json_object *nvm711_controller_info_to_json(nvmLayout_t nvm_layout)
     json_object_object_add(jo, "homeId", home_id_to_json(ci.HomeID));
     json_add_int(jo, "nodeId", ci.NodeID);
     json_add_int(jo, "staticControllerNodeId", ci.StaticControllerNodeId);
-    // json_object_object_add(jo, "learnedHomeId", home_id_to_json(ci.HomeID));
-    // json_add_int(jo, "lastNodeIdLR", ci.LastUsedNodeId_LR);
     json_add_int(jo, "lastNodeId", ci.LastUsedNodeId);
     json_add_int(jo, "sucLastIndex", ci.SucLastIndex); // Moved to SUC
-    // json_add_int(jo, "controllerConfiguration", ci.ControllerConfiguration);
-    // json_add_bool(jo, "sucAwarenessPushNeeded", ci.SucAwarenessPushNeeded); // Currently not used. Don't save to JSON
-    // json_add_int(jo, "maxNodeIdLR", ci.MaxNodeId_LR);  // Don't save. Will be derived when reading the node table
     memcpy(&controller_configuration, &ci.ControllerConfiguration, sizeof(CONTROLLER_CONFIGURATION));
-    //  "controllerIsSecondary": 0,
     json_add_bool(jo, "controllerIsSecondary", controller_configuration.controller_is_secondary);
     json_add_bool(jo, "controllerOnOtherNetwork", controller_configuration.controller_on_other_network);
     json_add_bool(jo, "controllerNodeIdServerPresent", controller_configuration.controller_nodeid_server_present);
@@ -1435,11 +1324,8 @@ static json_object *nvm711_controller_info_to_json(nvmLayout_t nvm_layout)
     json_add_bool(jo, "noNodesIncluded", controller_configuration.no_nodes_included);
 
     json_add_int(jo, "maxNodeId", ci.MaxNodeId); // Don't save. Will be derived when reading the node table
-    // json_add_int(jo, "reservedIdLR", ci.ReservedId_LR); // Currently not used. Don't save to JSON
     json_add_int(jo, "reservedId", ci.ReservedId); // Currently not used. Don't save to JSON
     json_add_int(jo, "systemState", ci.SystemState);
-    // json_add_int(jo, "primaryLongRangeChannelId", ci.PrimaryLongRangeChannelId);
-    // json_add_int(jo, "longRangeChannelAutoMode", ci.LongRangeChannelAutoMode);
   }
 
   if (ECODE_NVM3_OK == ec_as)
@@ -1508,14 +1394,10 @@ static json_object *nvm715_controller_info_to_json(nvmLayout_t nvm_layout)
     json_object_object_add(jo, "homeId", home_id_to_json(ci.HomeID));
     json_add_int(jo, "nodeId", ci.NodeID);
     json_add_int(jo, "staticControllerNodeId", ci.StaticControllerNodeId);
-    // json_object_object_add(jo, "learnedHomeId", home_id_to_json(ci.HomeID));
     json_add_int(jo, "lastNodeId", ci.LastUsedNodeId);
     json_add_int(jo, "lastNodeIdLR", ci.LastUsedNodeId_LR);
     json_add_int(jo, "sucLastIndex", ci.SucLastIndex); // Moved to SUC
-    // json_add_int(jo, "controllerConfiguration", ci.ControllerConfiguration);
-    // json_add_bool(jo, "sucAwarenessPushNeeded", ci.SucAwarenessPushNeeded); // Currently not used. Don't save to JSON
     memcpy(&controller_configuration, &ci.ControllerConfiguration, sizeof(CONTROLLER_CONFIGURATION));
-    //  "controllerIsSecondary": 0,
     json_add_bool(jo, "controllerIsSecondary", controller_configuration.controller_is_secondary);
     json_add_bool(jo, "controllerOnOtherNetwork", controller_configuration.controller_on_other_network);
     json_add_bool(jo, "controllerNodeIdServerPresent", controller_configuration.controller_nodeid_server_present);
@@ -1640,14 +1522,10 @@ static json_object *nvm_from_719_controller_info_to_json(nvmLayout_t nvm_layout)
     json_object_object_add(jo, "homeId", home_id_to_json(ci.HomeID));
     json_add_int(jo, "nodeId", ci.NodeID);
     json_add_int(jo, "staticControllerNodeId", ci.StaticControllerNodeId);
-    // json_object_object_add(jo, "learnedHomeId", home_id_to_json(ci.HomeID));
     json_add_int(jo, "lastNodeId", ci.LastUsedNodeId);
     json_add_int(jo, "lastNodeIdLR", ci.LastUsedNodeId_LR);
     json_add_int(jo, "sucLastIndex", ci.SucLastIndex); // Moved to SUC
-    // json_add_int(jo,  "controllerConfiguration", ci.ControllerConfiguration);
-    // json_add_bool(jo, "sucAwarenessPushNeeded", ci.SucAwarenessPushNeeded); // Currently not used. Don't save to JSON
     memcpy(&controller_configuration, &ci.ControllerConfiguration, sizeof(CONTROLLER_CONFIGURATION));
-    //  "controllerIsSecondary": 0,
     json_add_bool(jo, "controllerIsSecondary", controller_configuration.controller_is_secondary);
     json_add_bool(jo, "controllerOnOtherNetwork", controller_configuration.controller_on_other_network);
     json_add_bool(jo, "controllerNodeIdServerPresent", controller_configuration.controller_nodeid_server_present);
@@ -2372,7 +2250,6 @@ static bool parse_controller_nvm711_json(json_object *jo_ctrl, nvmLayout_t nvm_l
 
   json_get_home_id(jo_ctrl, "homeId", ci.HomeID, 0, JSON_REQUIRED);
   ci.NodeID = json_get_int(jo_ctrl, "nodeId", 0, JSON_REQUIRED);
-  // ci.HomeID                  = json_get_int(jo_ctrl,  STRING_CONTROLLER_HOME_ID, 0, JSON_REQUIRED);
   ci.StaticControllerNodeId = json_get_int(jo_ctrl, "staticControllerNodeId", 0, JSON_REQUIRED);
   ci.LastUsedNodeId = json_get_int(jo_ctrl, "lastNodeId", 0, JSON_REQUIRED);
   ci.SucLastIndex = json_get_int(jo_ctrl, "sucLastIndex", 0, JSON_REQUIRED);
@@ -2388,9 +2265,6 @@ static bool parse_controller_nvm711_json(json_object *jo_ctrl, nvmLayout_t nvm_l
   controller_configuration.no_nodes_included = json_get_bool(jo_ctrl, "noNodesIncluded", true, JSON_REQUIRED);
   memcpy(&ci.ControllerConfiguration, &controller_configuration, sizeof(CONTROLLER_CONFIGURATION));
   // SucAwarenessPushNeeded is not used anywhere in the protocol source code
-  // ci.SucAwarenessPushNeeded  = json_get_bool(jo_ctrl, STSTRING_SUC_AWARENESS_PUSH_NEEDED, false, JSON_REQUIRED);
-  // We don't write ReservedId to the JSON file, so no need to try reading it back
-  // ci.ReservedId              = json_get_int(jo_ctrl,  "reservedId", 0, JSON_REQUIRED);
 
   as.listening = json_get_bool(jo_ctrl, "isListening", true, JSON_REQUIRED);
   as.generic = json_get_int(jo_ctrl, "genericDeviceClass", 0, JSON_REQUIRED);
@@ -2480,7 +2354,6 @@ static bool parse_controller_nvm715_json(json_object *jo_ctrl, nvmLayout_t nvm_l
 
   json_get_home_id(jo_ctrl, "homeId", ci.HomeID, 0, JSON_REQUIRED);
   ci.NodeID = json_get_int(jo_ctrl, "nodeId", 0, JSON_REQUIRED);
-  // ci.HomeID                  = json_get_int(jo_ctrl,  STRING_CONTROLLER_HOME_ID, 0, JSON_REQUIRED);
   ci.StaticControllerNodeId = json_get_int(jo_ctrl, "staticControllerNodeId", 0, JSON_REQUIRED);
   ci.LastUsedNodeId_LR = json_get_int(jo_ctrl, "lastNodeIdLR", 0, JSON_REQUIRED);
   ci.LastUsedNodeId = json_get_int(jo_ctrl, "lastNodeId", 0, JSON_REQUIRED);
@@ -2501,9 +2374,6 @@ static bool parse_controller_nvm715_json(json_object *jo_ctrl, nvmLayout_t nvm_l
   controller_configuration.no_nodes_included = json_get_bool(jo_ctrl, "noNodesIncluded", true, JSON_REQUIRED);
   memcpy(&ci.ControllerConfiguration, &controller_configuration, sizeof(CONTROLLER_CONFIGURATION));
   // SucAwarenessPushNeeded is not used anywhere in the protocol source code
-  // ci.SucAwarenessPushNeeded  = json_get_bool(jo_ctrl, STSTRING_SUC_AWARENESS_PUSH_NEEDED, false, JSON_REQUIRED);
-  // We don't write ReservedId to the JSON file, so no need to try reading it back
-  // ci.ReservedId              = json_get_int(jo_ctrl,  "reservedId", 0, JSON_REQUIRED);
 
   as.listening = json_get_bool(jo_ctrl, "isListening", true, JSON_REQUIRED);
   as.generic = json_get_int(jo_ctrl, "genericDeviceClass", 0, JSON_REQUIRED);
@@ -2515,7 +2385,6 @@ static bool parse_controller_nvm715_json(json_object *jo_ctrl, nvmLayout_t nvm_l
     printf("controller_parse_json:json_get_object_error_check() error: cmdClasses \n");
     return false;
   }
-  // printf("jo_cmd_classes: %s\n", json_object_to_json_string(jo_cmd_classes));
   ai.UnSecureIncludedCCLen = json_get_bytearray(jo_cmd_classes, "includedInsecurely", ai.UnSecureIncludedCC, APPL_NODEPARM_MAX, JSON_REQUIRED);
   ai.SecureIncludedSecureCCLen = json_get_bytearray(jo_cmd_classes, "includedSecurelySecureCCs", ai.SecureIncludedSecureCC, APPL_NODEPARM_MAX, JSON_REQUIRED);
   ai.SecureIncludedUnSecureCCLen = json_get_bytearray(jo_cmd_classes, "includedSecurelyInsecureCCs", ai.SecureIncludedUnSecureCC, APPL_NODEPARM_MAX, JSON_REQUIRED);
@@ -2594,7 +2463,6 @@ static bool parse_controller_nvm719_json(json_object *jo_ctrl, nvmLayout_t nvm_l
 
   json_get_home_id(jo_ctrl, "homeId", ci.HomeID, 0, JSON_REQUIRED);
   ci.NodeID = json_get_int(jo_ctrl, "nodeId", 0, JSON_REQUIRED);
-  // ci.HomeID                  = json_get_int(jo_ctrl,  STRING_CONTROLLER_HOME_ID, 0, JSON_REQUIRED);
   ci.StaticControllerNodeId = json_get_int(jo_ctrl, "staticControllerNodeId", 0, JSON_REQUIRED);
   ci.LastUsedNodeId_LR = json_get_int(jo_ctrl, "lastNodeIdLR", 0, JSON_REQUIRED);
   ci.LastUsedNodeId = json_get_int(jo_ctrl, "lastNodeId", 0, JSON_REQUIRED);
@@ -2618,10 +2486,6 @@ static bool parse_controller_nvm719_json(json_object *jo_ctrl, nvmLayout_t nvm_l
   controller_configuration.no_nodes_included = json_get_bool(jo_ctrl, "noNodesIncluded", true, JSON_REQUIRED);
   memcpy(&ci.ControllerConfiguration, &controller_configuration, sizeof(CONTROLLER_CONFIGURATION));
   // SucAwarenessPushNeeded is not used anywhere in the protocol source code
-  // ci.SucAwarenessPushNeeded  = json_get_bool(jo_ctrl, STSTRING_SUC_AWARENESS_PUSH_NEEDED, false, JSON_REQUIRED);
-  // We don't write ReservedId to the JSON file, so no need to try reading it back
-  // ci.ReservedId              = json_get_int(jo_ctrl,  "reservedId", 0, JSON_REQUIRED);
-
   as.listening = json_get_bool(jo_ctrl, "isListening", true, JSON_REQUIRED);
   as.generic = json_get_int(jo_ctrl, "genericDeviceClass", 0, JSON_REQUIRED);
   as.specific = json_get_int(jo_ctrl, "specificDeviceClass", 0, JSON_REQUIRED);
@@ -2632,7 +2496,6 @@ static bool parse_controller_nvm719_json(json_object *jo_ctrl, nvmLayout_t nvm_l
     printf("controller_parse_json:json_get_object_error_check() error: cmdClasses \n");
     return false;
   }
-  // printf("jo_cmd_classes: %s\n", json_object_to_json_string(jo_cmd_classes));
   ai.UnSecureIncludedCCLen = json_get_bytearray(jo_cmd_classes, "includedInsecurely", ai.UnSecureIncludedCC, APPL_NODEPARM_MAX, JSON_REQUIRED);
   ai.SecureIncludedSecureCCLen = json_get_bytearray(jo_cmd_classes, "includedSecurelySecureCCs", ai.SecureIncludedSecureCC, APPL_NODEPARM_MAX, JSON_REQUIRED);
   ai.SecureIncludedUnSecureCCLen = json_get_bytearray(jo_cmd_classes, "includedSecurelyInsecureCCs", ai.SecureIncludedUnSecureCC, APPL_NODEPARM_MAX, JSON_REQUIRED);
@@ -2869,11 +2732,6 @@ bool controller_parse_json(json_object *jo, nvmLayout_t nvm_layout)
     printf("controller_parse_json:was_nvm3_error_detected()\n");
   }
 
-  // if (json_parse_error_detected()) {
-  //   printf("controller_parse_json:json_parse_error_detected()\n");
-  //   return false;
-  // }
-
   return true;
 }
 
@@ -2886,17 +2744,14 @@ nvmLayout_t read_layout_from_nvm_size(size_t nvm_image_size)
   if (nvm_image_size == 0xA000)
   {
     nvm_layout = NVM3_800s_FROM_719;
-    // printf("[DEBUG LOG]: This is 800s from 7.19\n");
   }
   else if (nvm_image_size == 0xC000)
   {
     nvm_layout = NVM3_700s;
-    // printf("[DEBUG LOG]: This is 700s\n");
   }
   else if (nvm_image_size == 0x10000)
   {
     nvm_layout = NVM3_800s_PRIOR_719;
-    // printf("[DEBUG LOG]: This is 800s before 7.19\n");
   }
   return nvm_layout;
 }
