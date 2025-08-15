@@ -1,4 +1,3 @@
-/* © 2019 Silicon Laboratories Inc. */
 #ifndef _JSON_HELPERS_H
 #define _JSON_HELPERS_H
 

@@ -1,4 +1,3 @@
-/* © 2019 Silicon Laboratories Inc. */
 #ifndef _CONTROLLERLIB_API_H
 #define _CONTROLLERLIB_API_H
 

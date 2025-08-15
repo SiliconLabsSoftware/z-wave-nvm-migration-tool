@@ -1,4 +1,3 @@
-/* © 2019 Silicon Laboratories Inc. */
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>

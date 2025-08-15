@@ -1,4 +1,3 @@
-/* © 2019 Silicon Laboratories Inc. */
 #ifndef _APP_UTILS_USER_MESSAGE_H
 #define _APP_UTILS_USER_MESSAGE_H
 

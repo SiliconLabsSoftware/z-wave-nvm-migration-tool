@@ -1,4 +1,3 @@
-/* © 2019 Silicon Laboratories Inc. */
 #ifndef _NVMLIB711_H
 #define _NVMLIB711_H
 

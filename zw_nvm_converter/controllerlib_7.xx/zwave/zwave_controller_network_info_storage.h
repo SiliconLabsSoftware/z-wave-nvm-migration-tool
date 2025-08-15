@@ -1,4 +1,3 @@
-/* © 2019 Silicon Laboratories Inc. */
 #ifndef _ZWAVE_CONTROLLER_NETWORK_INFO_STORAGE_H
 #define _ZWAVE_CONTROLLER_NETWORK_INFO_STORAGE_H
 

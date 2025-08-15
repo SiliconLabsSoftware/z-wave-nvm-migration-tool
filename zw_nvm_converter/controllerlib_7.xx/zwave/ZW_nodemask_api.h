@@ -1,7 +1,6 @@
 /**
  * @file
  * @brief Functions used to manipulate bits (Node ID) in a NodeMask array.
- * @copyright 2019 Silicon Laboratories Inc.
  */
 #ifndef _ZW_NODEMASK_API_H_
 #define _ZW_NODEMASK_API_H_

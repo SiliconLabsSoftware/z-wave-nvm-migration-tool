@@ -1,4 +1,3 @@
-/* © 2019 Silicon Laboratories Inc. */
 #ifndef _ZW_TRANSPORT_API_SMALL_H
 #define _ZW_TRANSPORT_API_SMALL_H
 

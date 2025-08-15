@@ -1,4 +1,3 @@
-/* © 2019 Silicon Laboratories Inc. */
 #include <stdio.h>
 #include <stdarg.h>
 #include "user_message.h"

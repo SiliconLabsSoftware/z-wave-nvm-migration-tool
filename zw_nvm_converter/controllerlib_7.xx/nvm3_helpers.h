@@ -1,4 +1,3 @@
-/* © 2019 Silicon Laboratories Inc. */
 #ifndef _NVM3_HELPERS_H
 #define _NVM3_HELPERS_H
 
