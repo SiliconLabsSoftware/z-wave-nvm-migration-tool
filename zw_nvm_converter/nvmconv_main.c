@@ -84,7 +84,10 @@ json_object *zw_nvm_to_json(const char *in_file,
           if (out_file == NULL)
           {
             // Generate out_file name by replacing .bin with .json in in_file
-            size_t len = strlen(in_file);
+            char input_file_name[256];
+            strncpy(input_file_name, in_file, sizeof(input_file_name));
+            input_file_name[sizeof(input_file_name) - 1] = '\0'; // Ensure null termination
+            size_t len = strlen(input_file_name);
             if (len > 4 && strcmp(in_file + len - 4, ".bin") == 0)
             {
               snprintf(temp_output_file, sizeof(temp_output_file), "%.*s.json", (int)(len - 4), in_file);
@@ -162,7 +165,10 @@ void zw_json_to_nvm(const char *in_file,
         if (out_file == NULL)
         {
           // Generate out_file name by replacing .json with .bin in in_file
-          size_t len = strlen(in_file);
+          char input_file_name[256];
+          strncpy(input_file_name, in_file, sizeof(input_file_name));
+          input_file_name[sizeof(input_file_name) - 1] = '\0'; // Ensure null termination
+          size_t len = strlen(input_file_name);
           if (migration_mode)
           {
             if (len > 3 && strcmp(in_file + len - 4, ".bin") == 0)

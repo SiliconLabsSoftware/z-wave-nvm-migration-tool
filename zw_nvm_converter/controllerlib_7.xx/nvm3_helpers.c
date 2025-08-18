@@ -88,6 +88,7 @@ const char * lookup_filename(nvm3_ObjectKey_t key, const nvm3_file_descriptor_t 
   {
     if ((filelist[i].key == key) && (filelist[i].num_keys == 0))
     {
+      buf[sizeof(buf) - 1] = '\0'; // Ensure null termination
       strncpy(buf, filelist[i].name, sizeof(buf));
       break;
     }

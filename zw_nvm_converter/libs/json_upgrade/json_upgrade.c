@@ -472,7 +472,10 @@ void upgrade_json_to_version(const char *input_file, char *output_file, const ch
     if (output_file == NULL)
     {
       // Using default output file name "<input_file>_upgraded.json"
-      size_t len = strlen(input_file);
+      char input_file_name[256];
+      strncpy(input_file_name, input_file, sizeof(input_file_name));
+      input_file_name[sizeof(input_file_name) - 1] = '\0'; // Ensure null termination
+      size_t len = strlen(input_file_name);
       if (len > 5 && strcmp(input_file + len - 5, ".json") == 0)
       {
       snprintf(temp_output_file, sizeof(temp_output_file), "%.*s_upgraded.json", (int)(len - 5), input_file);
