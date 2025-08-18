@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.7)
 
 project(
   z-wave-nvm-migration-tool
-  VERSION 1.0.2
+  VERSION 1.0.3
 	LANGUAGES C CXX ASM
 )
 

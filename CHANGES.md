@@ -1,6 +1,13 @@
 Z-Wave NVM Tool Release Note 
 ==============================
 
+# Release 1.0.3
+(release date 2025-08-19)
+
+## New Features/Improvements/Bug fixes
+* Improvements on README.md
+* Filter forbidden migrations (700 Series only supports protocol versions up to 7.21.x)
+
 # Release 1.0.2
 (release date 2025-07-31)
 

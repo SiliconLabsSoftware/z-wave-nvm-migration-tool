@@ -66,7 +66,7 @@ z-wave-nvm-migration-tool/
 
 ## Usage
 ```sh
-Z-Wave NVM3 Migration Tool Version 1.0.2
+Z-Wave NVM3 Migration Tool
 Usage: ./z-wave-nvm-migration-tool [options] <arguments>
 Options:
     -e  <nvm_file_input>
