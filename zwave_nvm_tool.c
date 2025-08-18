@@ -119,7 +119,7 @@ global_mode_t parse_main_args(int argc,
  * @param cmd The name of the command or executable being run.
  * @return Always returns 1.
  */
-static int zw_mirgate_tool_print_usage(const char *cmd)
+static int zw_migration_tool_print_usage(const char *cmd)
 {
   printf("Usage: %s [options] <arguments>\n"
          "Options:\n"
@@ -183,7 +183,7 @@ int main(int argc, char **argv)
     break;
 
   case UNDEFINE_GLOBAL_MODE:
-    zw_mirgate_tool_print_usage(argv[0]);
+    zw_migration_tool_print_usage(argv[0]);
     break;
 
   default:
