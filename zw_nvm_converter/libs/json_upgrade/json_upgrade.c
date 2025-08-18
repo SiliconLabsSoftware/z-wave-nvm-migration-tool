@@ -492,7 +492,7 @@ void upgrade_json_to_version(const char *input_file, char *output_file, const ch
       json_object_put(root);
       exit(EXIT_FAILURE);
     }
-    printf("Upgrade process completed successfully. Output saved to %s\n", output_file);
+    printf("Upgrade process completed successfully.\nOutput saved to: %s\n", output_file);
   }
   // Clean up
   json_object_put(root);
