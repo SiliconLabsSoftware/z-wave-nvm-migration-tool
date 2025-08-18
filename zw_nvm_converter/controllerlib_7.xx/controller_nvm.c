@@ -50,7 +50,7 @@ target_version target_app_version = {};
 
 static uint32_t prot_version_le = 0;
 static uint32_t app_version_le = 0;
-static hardware_info_t hardware_info = ZW_700s;
+static hardware_info_t hardware_info = UNDEFINED_HARDWARE;
 static nvm3_file_descriptor_t *nvm3_current_protocol_files;
 static nvm3_file_descriptor_t *nvm3_files_v5_800s_719_720;
 static size_t nvm3_files_v5_800s_719_720_size;
@@ -2645,6 +2645,12 @@ bool json_get_nvm_layout(const char *device_info, json_object *jo, nvmLayout_t *
       printf("700 Series only supports protocol versions up to 7.21.x\n");
       return false;
     }
+  }
+  else 
+  {
+    printf("Unsupported hardware: %s\n", device_info);
+    printf("Supported hardwares are: EFR32XG28, EFR32XG23, EFR32XG14, EFR32XG13\n");
+    return false;
   }
 
   if (false == set_target_version(protocol_version, app_version))

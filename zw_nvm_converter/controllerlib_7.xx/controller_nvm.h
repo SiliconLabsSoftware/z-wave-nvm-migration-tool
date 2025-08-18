@@ -12,6 +12,7 @@ typedef enum {
 } nvmLayout_t;
 
 typedef enum {
+    UNDEFINED_HARDWARE,
     ZW_700s, 
     EFR32XG23,
     EFR32XG28
