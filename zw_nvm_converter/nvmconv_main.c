@@ -1,4 +1,3 @@
-/* © 2019 Silicon Laboratories Inc. */
 #include <stdio.h>
 #include <string.h>
 #include <getopt.h>
@@ -41,7 +40,7 @@ static size_t load_file_to_buf(const char *fname, uint8_t **buf)
   }
   else
   {
-    // printf("[DEBUG_LOG]: Cannot Open NVM File\n");
+    printf("Can not open NVM file: %s\n", fname);
   }
   if (items_read > 0)
   {

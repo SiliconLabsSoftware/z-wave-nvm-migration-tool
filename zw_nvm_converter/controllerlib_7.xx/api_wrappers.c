@@ -1,4 +1,3 @@
-/* © 2019 Silicon Laboratories Inc. */
 #include <stdio.h>
 #include <string.h>
 #include "controllerlib_api.h"

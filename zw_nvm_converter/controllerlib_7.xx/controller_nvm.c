@@ -50,7 +50,7 @@ target_version target_app_version = {};
 
 static uint32_t prot_version_le = 0;
 static uint32_t app_version_le = 0;
-static hardware_info_t hardware_info = ZW_700s;
+static hardware_info_t hardware_info = UNDEFINED_HARDWARE;
 static nvm3_file_descriptor_t *nvm3_current_protocol_files;
 static nvm3_file_descriptor_t *nvm3_files_v5_800s_719_720;
 static size_t nvm3_files_v5_800s_719_720_size;
@@ -548,16 +548,16 @@ bool check_controller_nvm(const uint8_t *nvm_image, size_t nvm_image_size, nvmLa
     if (ECODE_NVM3_OK == nvm3_getObjectInfo(&nvm3_protocol_handle, ZAF_FILE_ID_APP_VERSION_800s_XG28, &type, &size))
     {
       hardware_info = EFR32XG28;
-      printf("This is EFR32XG28\n");
+      printf("Detected chip family: 800 Series (EFR32XG28)\n");
     }
     else
     {
       hardware_info = EFR32XG23;
-      printf("This is EFR32XG23\n");
+      printf("Detected chip family: 800 Series (EFR32XG23)\n");
     }
     break;
   case 0xC000:
-    printf("This is 700 Series\n");
+    printf("Detected chip family: 700 Series (EFR32XG13 or EFR32XG14)\n");
     break;
   default:
     printf("Hardware is unknown or NVM Image Size is invalid\n");
@@ -2645,6 +2645,12 @@ bool json_get_nvm_layout(const char *device_info, json_object *jo, nvmLayout_t *
       printf("700 Series only supports protocol versions up to 7.21.x\n");
       return false;
     }
+  }
+  else 
+  {
+    printf("Unsupported hardware: %s\n", device_info);
+    printf("Supported hardwares are: EFR32XG28, EFR32XG23, EFR32XG14, EFR32XG13\n");
+    return false;
   }
 
   if (false == set_target_version(protocol_version, app_version))

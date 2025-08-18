@@ -1,4 +1,3 @@
-/* © 2019 Silicon Laboratories Inc. */
 #ifndef _NVMLIB711_H
 #define _NVMLIB711_H
 
@@ -12,6 +11,7 @@ typedef enum {
 } nvmLayout_t;
 
 typedef enum {
+    UNDEFINED_HARDWARE,
     ZW_700s, 
     EFR32XG23,
     EFR32XG28

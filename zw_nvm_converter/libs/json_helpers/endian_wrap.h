@@ -1,5 +1,3 @@
-/* © 2019 Silicon Laboratories Inc. */
-
 #if !defined(ENDIAN_WRAP_H)
 #define ENDIAN_WRAP_H
 
