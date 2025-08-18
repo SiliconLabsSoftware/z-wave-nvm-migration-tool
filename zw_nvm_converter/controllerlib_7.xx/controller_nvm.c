@@ -548,16 +548,16 @@ bool check_controller_nvm(const uint8_t *nvm_image, size_t nvm_image_size, nvmLa
     if (ECODE_NVM3_OK == nvm3_getObjectInfo(&nvm3_protocol_handle, ZAF_FILE_ID_APP_VERSION_800s_XG28, &type, &size))
     {
       hardware_info = EFR32XG28;
-      printf("This is EFR32XG28\n");
+      printf("Detected chip family: 800 Series (EFR32XG28)\n");
     }
     else
     {
       hardware_info = EFR32XG23;
-      printf("This is EFR32XG23\n");
+      printf("Detected chip family: 800 Series (EFR32XG23)\n");
     }
     break;
   case 0xC000:
-    printf("This is 700 Series\n");
+    printf("Detected chip family: 700 Series (EFR32XG13 or EFR32XG14)\n");
     break;
   default:
     printf("Hardware is unknown or NVM Image Size is invalid\n");
