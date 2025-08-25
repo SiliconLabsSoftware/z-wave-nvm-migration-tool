@@ -44,6 +44,7 @@ debian_packages+=cmake
 debian_packages+=libjson-c-dev
 # packages/deps/more:
 debian_packages+=gcovr
+debian_packages+=reuse
 debian_packages+=ruby
 
 app_dir?=opt
@@ -210,9 +211,14 @@ ${build_dir}: ${build_dir}/CMakeCache.txt
 test: ${build_dir} all
 	${ctest} --test-dir ${<}/${project_test_dir}
 
-check: ${test_dir}/test.sh ${run_file}
+app/check: ${test_dir}/test.sh ${run_file}
 	${run_file}
 	sh ${<D}/${<F}
+
+reuse/check:
+	${@D} lint
+
+check: app/check reuse/check
 
 coverage: ${coverage_file}
 	ls -l "$<"
