@@ -1,6 +1,7 @@
 #!/bin/echo docker build . -f
 # -*- coding: utf-8 -*-
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2025 Silicon Laboratories Inc. https://www.silabs.com
 
 ARG OS_NAME=debian
 ARG OS_VERSION_CODENAME=bookworm
