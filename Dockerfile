@@ -4,7 +4,7 @@
 # SPDX-FileCopyrightText: 2025 Silicon Laboratories Inc. https://www.silabs.com
 
 ARG OS_NAME=debian
-ARG OS_VERSION_CODENAME=bookworm
+ARG OS_VERSION_CODENAME=trixie
 
 FROM ${OS_NAME}:${OS_VERSION_CODENAME} AS builder
 
@@ -33,7 +33,7 @@ RUN echo "# log: Build ${project}" \
   && ${HELPER} \
   && date -u
 
-FROM debian:bookworm
+FROM ${OS_NAME}:${OS_VERSION_CODENAME}
 ENV project=z-wave-nvm-migration-tool
 ARG workdir=/usr/local/opt/${project}
 WORKDIR ${workdir}

@@ -33,7 +33,7 @@ setup_rules+=setup/debian
 default_rules+=configure prepare all test check dist
 
 # TODO: Keep aligned to latest debian stable
-debian_codename?=bookworm
+debian_codename?=trixie
 
 # packages/helper:
 debian_packages+=make sudo git file
@@ -128,6 +128,9 @@ setup/debian:
 	${sudo} apt install -y ${debian_packages}
 
 setup/debian/bookworm: setup/debian
+	date -u
+
+setup/debian/${debian_codename}: setup/debian
 	date -u
 
 setup: ${setup_rules}

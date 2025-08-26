@@ -15,7 +15,7 @@ ARCH=arm64 ./scripts/build-rootfs.sh
 EOF
 
 project="z-wave-nvm-migration-tool"
-debian_suite="${debian_suite:=bookworm}"
+debian_suite="${debian_suite:=trixie}"
 debian_arch=$(dpkg --print-architecture)
 
 # Can be overloaded from env eg: ARCH=arm64"
