@@ -5,7 +5,7 @@ target_include_directories(zw_nvm_converter PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
 target_include_directories(controllerlib_api INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include" ${JSON-C_INCLUDE_DIRS}
 )
 
-add_subdirectory( nvm3lib )
+include(${CMAKE_SOURCE_DIR}/cmake/modules/FindNVM3lib.cmake)
 add_subdirectory( controllerlib_7.xx )
 add_subdirectory( libs)
 

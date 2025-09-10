@@ -1,11 +1,12 @@
+set(NVM3LIB_PATH "${CMAKE_BINARY_DIR}/zipgateway/systools/zw_nvm_converter/nvm3lib")
 add_mock(nvm3_mock 
   ${CMAKE_SOURCE_DIR}/tests/mock/nvm3_stubs.h
 )
 target_include_directories(nvm3_mock
   PUBLIC
-  ${CMAKE_SOURCE_DIR}/zw_nvm_converter/nvm3lib/platform/emdrv/nvm3/inc/
-  ${CMAKE_SOURCE_DIR}/zw_nvm_converter/nvm3lib/platform/emdrv/nvm3/config/
-  ${CMAKE_SOURCE_DIR}/zw_nvm_converter/nvm3lib/platform/emdrv/common/inc/
+  ${NVM3LIB_PATH}/platform/emdrv/nvm3/inc/
+  ${NVM3LIB_PATH}/platform/emdrv/nvm3/config/
+  ${NVM3LIB_PATH}/platform/emdrv/common/inc/
 	${CMAKE_SOURCE_DIR}/zw_nvm_converter/controllerlib_7.xx/zwave
 )
 # Build nvm3_mock with HOST_BUILD and set FLASH_PAGE_SIZE and NVM3_DEFAULT_CACHE_SIZE for host environment to be applied with nvm3_hal
@@ -23,9 +24,9 @@ add_mock(nvm3_helpers_mock
 )
 target_include_directories(nvm3_helpers_mock
   PUBLIC
-  ${CMAKE_SOURCE_DIR}/zw_nvm_converter/nvm3lib/platform/emdrv/nvm3/inc/
-  ${CMAKE_SOURCE_DIR}/zw_nvm_converter/nvm3lib/platform/emdrv/nvm3/config/
-  ${CMAKE_SOURCE_DIR}/zw_nvm_converter/nvm3lib/platform/emdrv/common/inc/
+  ${NVM3LIB_PATH}/platform/emdrv/nvm3/inc/
+  ${NVM3LIB_PATH}/platform/emdrv/nvm3/config/
+  ${NVM3LIB_PATH}/platform/emdrv/common/inc/
 	${CMAKE_SOURCE_DIR}/zw_nvm_converter/controllerlib_7.xx/zwave
 )
 target_compile_definitions(nvm3_helpers_mock PUBLIC NVM3_HOST_BUILD FLASH_PAGE_SIZE=2048 NVM3_DEFAULT_CACHE_SIZE=400)
