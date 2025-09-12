@@ -8,13 +8,14 @@
 # Set zipgateway repository info
 set(REPO_URL "https://github.com/SiliconLabs/zipgateway.git")
 set(CHECKOUT_DIR "${CMAKE_BINARY_DIR}/zipgateway")
+set(ZGW_TAG "zipgateway-7.18.03")
 set(NVM3LIB_PATH_RELATIVE "systools/zw_nvm_converter/nvm3lib")
 set(NVM3LIB_PATH ${CHECKOUT_DIR}/${NVM3LIB_PATH_RELATIVE})
 set(EDIAN_WRAPER_PATH "systools/libs/json_helpers/edian_wrap.h")
 # Clone if not already present
 if(NOT EXISTS ${CHECKOUT_DIR})
   execute_process(
-    COMMAND git clone --no-checkout ${REPO_URL} ${CHECKOUT_DIR}
+    COMMAND git clone --no-checkout --branch ${ZGW_TAG} --depth 1 ${REPO_URL} ${CHECKOUT_DIR}
   )
 endif()
 
@@ -31,7 +32,7 @@ execute_process(
 
 # Checkout the pinned tag
 execute_process(
-  COMMAND git checkout zipgateway-7.18.03
+  COMMAND git checkout ${ZGW_TAG}
   WORKING_DIRECTORY ${CHECKOUT_DIR}
 )
 
