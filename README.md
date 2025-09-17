@@ -191,3 +191,7 @@ commander flash nvm.bin --address=0x00074000
 ```sh
 zw_programmer -s <serial_device> -w nvm.bin
 ```
+
+## References
+
+* https://github.com/SiliconLabs/zipgateway (upstream source of duplicated files)
