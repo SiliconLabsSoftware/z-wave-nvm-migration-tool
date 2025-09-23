@@ -8,7 +8,7 @@ on:
             - "release/**"
 jobs:
   trufflehog_scan:
-    runs-on: ubuntu-24.04
+    runs-on: ${{ vars.RUNNER || 'ubuntu-24.04' }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
