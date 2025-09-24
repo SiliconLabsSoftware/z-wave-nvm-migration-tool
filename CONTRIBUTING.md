@@ -100,7 +100,7 @@ Example branch name:
 ```
 99-bootloader-implementation
 ```
-Issue number is necessary to maintain tracebility.
+Issue number is necessary to maintain traceability.
 Now you have a branch. You can start committing your code onto it.
 
 ## Commit Messages
