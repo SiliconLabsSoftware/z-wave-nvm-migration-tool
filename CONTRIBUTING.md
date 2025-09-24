@@ -18,7 +18,7 @@ As a contributor, you'll want to be familiar with the Silicon Labs tooling:
 
 Read the Silicon Labs [coding guidelines](https://github.com/SiliconLabsSoftware/agreements-and-guidelines/blob/main/coding_standard.md).  
 ## Git Setup
-We need to know who you are, and how to contact you. Please ass the following information to your Git installation:
+We need to know who you are, and how to contact you. Please add the following information to your Git installation:
 ```
 git config --global user.name "FirstName LastName"
 git config --global user.email "firstname.lastname@example.com"
