@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   CLAAssistant:
-    runs-on: ubuntu-24.04
+    runs-on: ${{ vars.RUNNER || 'ubuntu-24.04' }}
     steps:
       - name: Create CLA Assistant Lite bot token
         uses: actions/create-github-app-token@v2
