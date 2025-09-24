@@ -123,7 +123,7 @@ What to consider when raising a Pull Request:
 2. **Create Description**
    Fill out the pull request template.
 3. **Check the Reviewer List**  
-   GitHub assigns reviewers based on the [CODEOWNERS](CODEOWNERS) file.  
+   GitHub assigns reviewers based on the [CODEOWNERS](.github/CODEOWNERS) file.  
    Add more reviewers if needed. Do not remove reviewers from the PR. Ask the repository owner for updates to the code owners.
 4. **Evaluate the Action Workflow Results**  
    The following workflows are included in every repository:
