@@ -1,6 +1,7 @@
 #!/bin/echo docker build . -f
 # -*- coding: utf-8 -*-
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: Zlib
+# SPDX-License-URL: https://spdx.org/licenses/Zlib.txt
 # SPDX-FileCopyrightText: 2025 Silicon Laboratories Inc. https://www.silabs.com
 
 ARG OS_NAME=debian
