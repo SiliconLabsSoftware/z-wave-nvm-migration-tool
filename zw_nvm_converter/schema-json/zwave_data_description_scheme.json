@@ -60,7 +60,7 @@
           "description": "Name of the application",
           "type": "string",
           "subtype": "string",
-          "pattern": "^[.]{,30}$",
+          "pattern": "^.{0,29}$",
           "group": "application",
           "createdVersion": "7.20.0",
           "default_value": "serial_api_controller"
