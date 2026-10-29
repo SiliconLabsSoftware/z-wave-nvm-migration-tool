@@ -1754,24 +1754,47 @@ static uint8_t parse_node_capability(json_object *jo_node, uint8_t *node_reserve
 static uint8_t parse_node_security(json_object *jo_node)
 {
   uint8_t security = 0;
+
   // is Frequent Listening device?
   enum json_type jo_frequent_listening_type = json_object_get_type(json_object_object_get(jo_node, "isFrequentListening"));
   if (jo_frequent_listening_type == json_type_string)
   {
-    security |= (json_get_string(jo_node, "isFrequentListening", "250ms", JSON_REQUIRED) == "250ms") ? ZWAVE_NODEINFO_SENSOR_MODE_WAKEUP_250 : ZWAVE_NODEINFO_SENSOR_MODE_WAKEUP_1000;
+    // If this is a string type, get the string
+    const char* flirs_mode = json_get_string(jo_node, "isFrequentListening", "", JSON_REQUIRED);
+
+    // Compare the string to the valid options
+    if(strcmp(flirs_mode, "250ms") == 0)
+    {
+      security |= ZWAVE_NODEINFO_SENSOR_MODE_WAKEUP_250;
+    }
+    else if(strcmp(flirs_mode, "1000ms") == 0)
+    {
+      security |= ZWAVE_NODEINFO_SENSOR_MODE_WAKEUP_1000;
+    }
+    // All other strings are invalid, so no bits are set
+  }
+  else if (jo_frequent_listening_type == json_type_boolean)
+  {
+    // "false" is a valid option in the schema, but "true" is not (it must be either "250ms" or "1000ms")
+    // Just in case, assume "true" means 1000ms wakeup mode, since 250ms nodes end up waking up at that interval too
+    if(json_get_bool(jo_node, "isFrequentListening", false, JSON_REQUIRED))
+    {
+      security |= ZWAVE_NODEINFO_SENSOR_MODE_WAKEUP_1000;
+    }
+    // Do not set a bit for "false" boolean value
   }
 
   // optional Function?
-  security = json_get_bool(jo_node, "optionalFunctionality", false, JSON_REQUIRED) ? (security | ZWAVE_NODEINFO_OPTIONAL_FUNC) : security;
+  security |= json_get_bool(jo_node, "optionalFunctionality", false, JSON_REQUIRED) ? (ZWAVE_NODEINFO_OPTIONAL_FUNC) : 0;
 
-  // nodeType
-  security |= json_get_int(jo_node, "nodeType", 0, JSON_REQUIRED) ? 0x08 : 0x02;
+  // nodeType, 0 for a controller, 1 for an end device
+  security |= json_get_int(jo_node, "nodeType", 0, JSON_REQUIRED) ? ZWAVE_NODEINFO_SLAVE_ROUTING : ZWAVE_NODEINFO_CONTROLLER_NODE;
 
   // Security support?
-  security = json_get_bool(jo_node, "supportsSecurity", true, JSON_REQUIRED) ? (security | ZWAVE_NODEINFO_SECURITY_SUPPORT) : security;
+  security |= json_get_bool(jo_node, "supportsSecurity", true, JSON_REQUIRED) ? (ZWAVE_NODEINFO_SECURITY_SUPPORT) : 0;
 
   // Beaming support?
-  security = json_get_bool(jo_node, "supportsBeaming", true, JSON_REQUIRED) ? (security | ZWAVE_NODEINFO_BEAM_CAPABILITY) : security;
+  security |= json_get_bool(jo_node, "supportsBeaming", true, JSON_REQUIRED) ? (ZWAVE_NODEINFO_BEAM_CAPABILITY) : 0;
 
   return security;
 }
@@ -1961,11 +1984,35 @@ static bool parse_lr_node_table_json(json_object *jo_lrntbl)
         ZW_NodeMaskSetBit(lr_node_info_exists, node_id - ZW_LR_MIN_NODE_ID + 1);
         ni = &ni_buf[(node_id - ZW_LR_MIN_NODE_ID) % LR_NODEINFOS_PER_FILE];
 
-        enum json_type jo_frequent_listening_type = json_object_get_type(json_object_object_get(jo_lrnode, "isFrequentListening"));
         ni->packedInfo = 0;
+
+        // is Frequent Listening device?
+        enum json_type jo_frequent_listening_type = json_object_get_type(json_object_object_get(jo_lrnode, "isFrequentListening"));
         if (jo_frequent_listening_type == json_type_string)
         {
-          ni->packedInfo |= (json_get_string(jo_lrnode, "isFrequentListening", "250ms", JSON_REQUIRED) == "250ms") ? ZWAVE_NODEINFO_SENSOR_MODE_WAKEUP_250 : ZWAVE_NODEINFO_SENSOR_MODE_WAKEUP_1000;
+          // If this is a string type, get the string
+          const char* flirs_mode = json_get_string(jo_lrnode, "isFrequentListening", "", JSON_REQUIRED);
+
+          // Compare the string to the valid options
+          if(strcmp(flirs_mode, "250ms") == 0)
+          {
+            ni->packedInfo |= ZWAVE_NODEINFO_SENSOR_MODE_WAKEUP_250;
+          }
+          else if(strcmp(flirs_mode, "1000ms") == 0)
+          {
+            ni->packedInfo |= ZWAVE_NODEINFO_SENSOR_MODE_WAKEUP_1000;
+          }
+          // All other strings are invalid, so no bits are set
+        }
+        else if (jo_frequent_listening_type == json_type_boolean)
+        {
+          // "false" is a valid option in the schema, but "true" is not (it must be either "250ms" or "1000ms")
+          // Just in case, assume "true" means 1000ms wakeup mode, since 250ms nodes end up waking up at that interval too
+          if(json_get_bool(jo_lrnode, "isFrequentListening", false, JSON_REQUIRED))
+          {
+            ni->packedInfo |= ZWAVE_NODEINFO_SENSOR_MODE_WAKEUP_1000;
+          }
+          // Do not set a bit for "false" boolean value
         }
 
         ni->packedInfo |= json_get_bool(jo_lrnode, "isListening", false, JSON_REQUIRED) ? NODEINFO_FLAG_LISTENING : 0x00;

@@ -238,13 +238,14 @@ void test_parse_node_security(void)
     \"supportesBeaming\": true,\
 }";
   json_object *jo = json_tokener_parse(json_security_tc1);
+  json_get_bool_ExpectAndReturn(jo, "isFrequentListening", false, JSON_REQUIRED, false);
   json_get_bool_ExpectAndReturn(jo, "optionalFunctionality", false, JSON_REQUIRED, true);
   json_get_int_ExpectAndReturn(jo, "nodeType", 0, JSON_REQUIRED, 1);
   json_get_bool_ExpectAndReturn(jo, "supportsSecurity", true, JSON_REQUIRED, true);
   json_get_bool_ExpectAndReturn(jo, "supportsBeaming", true, JSON_REQUIRED, true);
   uint8_t security = parse_node_security(jo);
   TEST_ASSERT_EQUAL_HEX(ZWAVE_NODEINFO_OPTIONAL_FUNC |
-                            0x08 |
+                            ZWAVE_NODEINFO_SLAVE_ROUTING |
                             ZWAVE_NODEINFO_SECURITY_SUPPORT |
                             ZWAVE_NODEINFO_BEAM_CAPABILITY,
                         security);
@@ -256,7 +257,7 @@ void test_parse_node_security(void)
     \"supportesBeaming\": true,\
 }";
   jo = json_tokener_parse(json_security_tc2);
-  json_get_string_ExpectAndReturn(jo, "isFrequentListening", "250ms", JSON_REQUIRED, "250ms");
+  json_get_string_ExpectAndReturn(jo, "isFrequentListening", "", JSON_REQUIRED, "250ms");
   json_get_bool_ExpectAndReturn(jo, "optionalFunctionality", false, JSON_REQUIRED, true);
   json_get_int_ExpectAndReturn(jo, "nodeType", 0, JSON_REQUIRED, 1);
   json_get_bool_ExpectAndReturn(jo, "supportsSecurity", true, JSON_REQUIRED, true);
@@ -264,7 +265,7 @@ void test_parse_node_security(void)
   security = parse_node_security(jo);
   TEST_ASSERT_EQUAL_HEX(ZWAVE_NODEINFO_SENSOR_MODE_WAKEUP_250 |
                             ZWAVE_NODEINFO_OPTIONAL_FUNC |
-                            0x08 |
+                            ZWAVE_NODEINFO_SLAVE_ROUTING |
                             ZWAVE_NODEINFO_SECURITY_SUPPORT |
                             ZWAVE_NODEINFO_BEAM_CAPABILITY,
                         security);
@@ -276,7 +277,7 @@ void test_parse_node_security(void)
     \"supportesBeaming\": true,\
 }";
   jo = json_tokener_parse(json_security_tc3);
-  json_get_string_ExpectAndReturn(jo, "isFrequentListening", "250ms", JSON_REQUIRED, "1000ms");
+  json_get_string_ExpectAndReturn(jo, "isFrequentListening", "", JSON_REQUIRED, "1000ms");
   json_get_bool_ExpectAndReturn(jo, "optionalFunctionality", false, JSON_REQUIRED, true);
   json_get_int_ExpectAndReturn(jo, "nodeType", 0, JSON_REQUIRED, 1);
   json_get_bool_ExpectAndReturn(jo, "supportsSecurity", true, JSON_REQUIRED, true);
@@ -284,7 +285,7 @@ void test_parse_node_security(void)
   security = parse_node_security(jo);
   TEST_ASSERT_EQUAL_HEX(ZWAVE_NODEINFO_SENSOR_MODE_WAKEUP_1000 |
                             ZWAVE_NODEINFO_OPTIONAL_FUNC |
-                            0x08 |
+                            ZWAVE_NODEINFO_SLAVE_ROUTING |
                             ZWAVE_NODEINFO_SECURITY_SUPPORT |
                             ZWAVE_NODEINFO_BEAM_CAPABILITY,
                         security);
